@@ -8,7 +8,7 @@ namespace NPrismy.Logging
     {        
         public IOLogger()
         {
-        
+            
         }
         public void LogError(string errorMessage)
         {

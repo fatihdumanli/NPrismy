@@ -3,9 +3,12 @@ using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using NPrismy.Exceptions;
 using NPrismy.IOC;
+using NPrismy.Logging;
 
 namespace NPrismy
 {
+
+    //Entry point for package. Acts like Program.cs
     public static class ServiceProviderExtensions
     {
         public static void AddNPrismy<T>(this IServiceCollection services, DatabaseOptions options) where T: Database
@@ -24,6 +27,13 @@ namespace NPrismy
             //Remember that Connection object constructors requires a connection string!!!
             AutofacModule.ContainerBuilder.RegisterType(connectionConcrete).As<IConnection>()
                 .WithParameter(new TypedParameter(typeof(string), options.ConnectionString));
+
+            AutofacModule.ContainerBuilder.RegisterType<IOLogger>().As<ILogger>();
+
+            AutofacModule.ContainerBuilder.RegisterType<EntityTableBuilder>().InstancePerDependency();
+
+            //Registering generic EntityTable<>
+            AutofacModule.ContainerBuilder.RegisterGeneric(typeof(EntityTable<>));
         }
     }
 }
