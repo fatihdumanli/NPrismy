@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace NPrismy
 {
@@ -13,9 +14,14 @@ namespace NPrismy
             connection = new SqlConnection(connStr);
         }
 
-        public void Open()
+        public async Task Close()
         {
-            connection.Open();
+            await connection.CloseAsync();
+        }
+
+        public async Task Open()
+        {
+            await connection.OpenAsync();
         }
     }
 }

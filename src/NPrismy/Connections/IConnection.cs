@@ -1,8 +1,12 @@
+using System.Threading.Tasks;
+
 namespace NPrismy
 {
     public interface IConnection
     {
-        void Open();
+        Task Open();
+
+        Task Close();
 
     }
 }

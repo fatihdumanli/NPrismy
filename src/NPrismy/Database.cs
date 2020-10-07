@@ -1,4 +1,5 @@
 using Autofac;
+using Microsoft.Extensions.Logging;
 using NPrismy.IOC;
 
 namespace NPrismy
@@ -6,7 +7,6 @@ namespace NPrismy
     public abstract class Database
     {
         private DatabaseOptions _options;
-
         public Database()
         {
         }
@@ -15,10 +15,11 @@ namespace NPrismy
         {
             this._options = options;      
             var connection = AutofacModule.Container.ResolveOptional<IConnection>();
-            
-            connection.Open();
-        }
 
+            connection.Open();
+            //testing connection
+            connection.Close();
+        }
     }
     
 }
