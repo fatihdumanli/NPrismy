@@ -1,6 +1,6 @@
 using Autofac;
-using Microsoft.Extensions.Logging;
 using NPrismy.IOC;
+using NPrismy.Logging;
 
 namespace NPrismy
 {
@@ -16,6 +16,8 @@ namespace NPrismy
             this._options = options;      
             var connection = AutofacModule.Container.ResolveOptional<IConnection>();
 
+            IOLogger logger = new IOLogger();
+            logger.LogError("testststsfsd");
             connection.Open();
             //testing connection
             connection.Close();

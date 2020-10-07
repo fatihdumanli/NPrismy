@@ -1,7 +1,6 @@
 using System;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NPrismy.Exceptions;
 using NPrismy.IOC;
 
