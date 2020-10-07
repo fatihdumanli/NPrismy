@@ -1,3 +1,6 @@
+using Autofac;
+using NPrismy.IOC;
+
 namespace NPrismy
 {
     public abstract class Database
@@ -11,12 +14,9 @@ namespace NPrismy
         public Database(DatabaseOptions options)
         {
             this._options = options;      
-
+            var connection = AutofacModule.Container.ResolveOptional<IConnection>();
             
-            if(options.Provider == PersistanceProvider.SqlServer)
-            {
-
-            }             
+            connection.Open();
         }
 
     }

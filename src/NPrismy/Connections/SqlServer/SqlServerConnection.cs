@@ -11,9 +11,11 @@ namespace NPrismy
         {
             //test conn
             connection = new SqlConnection(connStr);
-            connection.Open();            
         }
 
-
+        public void Open()
+        {
+            connection.Open();
+        }
     }
 }

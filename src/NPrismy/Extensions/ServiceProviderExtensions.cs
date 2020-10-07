@@ -1,6 +1,8 @@
 using System;
+using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using NPrismy.Exceptions;
+using NPrismy.IOC;
 
 namespace NPrismy
 {
@@ -10,22 +12,8 @@ namespace NPrismy
         {
             services.AddScoped<T>();
 
-
-            switch(options.Provider)
-            {
-                case PersistanceProvider.SqlServer:
-                    //register SqlServerConnection to Autofac container;
-                break;
-
-                case PersistanceProvider.MySql:
-                    break;
-
-                case PersistanceProvider.Oracle:
-                    break;
-
-                default:
-                    throw new PersistanceProviderNotFoundException();
-            }
+            var connectionConcrete = PersistanceProviderFactory.GetProvider(options.Provider);
+            AutofacModule.Register<IConnection>(connectionConcrete);
 
         }
     }
