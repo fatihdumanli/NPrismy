@@ -12,7 +12,7 @@ namespace NPrismy.IOC
             {
                 if(_container == null)
                 {
-                    _container = _builder.Build();
+                    _container = ContainerBuilder.Build();
                 }
 
                 return _container;
@@ -20,51 +20,10 @@ namespace NPrismy.IOC
 
         }
 
-        private static ContainerBuilder _builder = new ContainerBuilder();
+        public static ContainerBuilder ContainerBuilder { get; set; } = new ContainerBuilder();
+
+
         
-        public static void Register<TIntf>(Type impl)
-        {
-            _builder.RegisterType(impl).As<TIntf>().InstancePerLifetimeScope();
-        }
-
-        public static void Register<TIntf, TImpl>(RegistrationType type = RegistrationType.Scoped)
-        {
-            var b = _builder.RegisterType<TImpl>().As<TIntf>();
-
-            switch(type)
-            {
-                case RegistrationType.Scoped:
-                    b.InstancePerLifetimeScope();
-                    break;
-
-                case RegistrationType.Singleton:
-                    b.SingleInstance();
-                    break;
-
-                case RegistrationType.Transient:
-                    b.InstancePerDependency();
-                    break;
-            }
-        }
-
-        public static void Register<TConcrete>(RegistrationType type = RegistrationType.Scoped)
-        {
-             var b = _builder.RegisterType<TConcrete>();
-
-            switch(type)
-            {
-                case RegistrationType.Scoped:
-                    b.InstancePerLifetimeScope();
-                    break;
-
-                case RegistrationType.Singleton:
-                    b.SingleInstance();
-                    break;
-
-                case RegistrationType.Transient:
-                    b.InstancePerDependency();
-                    break;
-            }
-        }
+        
     }
 }
