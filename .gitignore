@@ -12,6 +12,7 @@ _ReSharper.*/
 *.log
 TestResult.xml
 *.VisualState.xml
+/TestClient/
 Version.cs
 Version.h
 Version.cpp
