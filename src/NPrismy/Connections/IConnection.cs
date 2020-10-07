@@ -7,6 +7,8 @@ namespace NPrismy
         Task Open();
 
         Task Close();
+        
+        Task QueryAsync(string query);
 
     }
 }
