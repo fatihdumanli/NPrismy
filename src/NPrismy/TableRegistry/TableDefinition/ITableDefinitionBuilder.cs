@@ -1,7 +1,10 @@
+using System;
+
 namespace NPrismy
 {
     internal interface ITableDefinitionBuilder
     {
-        TableDefinition<T> Build<T>();
+        TableDefinition Build<T>();
+        TableDefinition Build(Type entityType);
     }
 }

@@ -28,16 +28,15 @@ namespace NPrismy
             await connection.OpenAsync();
         }
 
-        public async Task QueryAsync(string query)
+        public async Task QueryAsync<T>(string query)
         {
             var sqlCommand = new SqlCommand(query, connection);
-            logger.LogInformation(query);
-
             await connection.OpenAsync();
-            logger.LogInformation("connection opened");
 
              using(SqlDataReader reader = await sqlCommand.ExecuteReaderAsync())
              {
+
+                logger.LogInformation("Query executed in connection class.");
                 while (reader.Read())
                 {
                     var id = reader.GetInt32(reader.GetOrdinal("Id"));

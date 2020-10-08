@@ -37,12 +37,32 @@ namespace NPrismy
         }
 
 
-        public void RegisterTableDefinition<T>(TableDefinition<T> tableDefinition)
+        internal void RegisterTablesForDatabaseObject<T>()
+        {
+            logger.LogInformation("log from RegisterTablesForDatabaseObject");
+            var databaseType = typeof(T);
+            var databaseProperties = databaseType.GetProperties();
+
+            foreach(var property in databaseProperties)
+            {
+                var propertyType = property.PropertyType;
+                
+                if(propertyType.IsGenericType)
+                {
+                    var entityType = propertyType.GetGenericArguments()[0];
+                    var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>().Build(entityType);
+                    TableRegistry.Instance.RegisterTableDefinition(tableDefinition);
+                }                
+            }             
+          
+        }
+
+        private void RegisterTableDefinition(TableDefinition tableDefinition)
         {
             try
             {
-                _tableDefinitions.Add(new KeyValuePair<Type, TableDefinition>(typeof(T), tableDefinition));         
-                logger.LogInformation("Table definition registered successfully for type: " + typeof(T).Name + " table name: " + tableDefinition.GetTableName()); 
+                _tableDefinitions.Add(new KeyValuePair<Type, TableDefinition>(tableDefinition.GetEntityType(), tableDefinition));         
+                logger.LogInformation("Table definition registered successfully for type: " + tableDefinition.GetEntityType() + " table name: " + tableDefinition.GetTableName()); 
                 logger.LogInformation(" TableDefinitions count: " + _tableDefinitions.Count);
 
             }
@@ -56,7 +76,7 @@ namespace NPrismy
         }
 
 
-        public TableDefinition<T> GetTableDefinition<T>()
+        public TableDefinition GetTableDefinition<T>()
         {
             logger.LogInformation(" GetTableDefinition called for type: " + typeof(T).Name);
             logger.LogInformation(" TableDefinitions count: " + _tableDefinitions.Count);
@@ -72,7 +92,7 @@ namespace NPrismy
                 throw new TableDefinitionNotFoundException(nameof(T));
             }
 
-            return def.Value as TableDefinition<T>;            
+            return def.Value;         
         }
 
        
