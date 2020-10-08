@@ -30,18 +30,31 @@ namespace NPrismy
 
         public async Task QueryAsync<T>(string query)
         {
+            query = "select * from def.processDefinitions";
             var sqlCommand = new SqlCommand(query, connection);
-            await connection.OpenAsync();
+            logger.LogInformation("sqlcommand object created in connection.queryAsync()");
 
-             using(SqlDataReader reader = await sqlCommand.ExecuteReaderAsync())
-             {
-
-                logger.LogInformation("Query executed in connection class.");
-                while (reader.Read())
+            //TODO: CREATE A WRAPPER CLASS FOR QUERY RESULTS (MYSQL, MSSQL, ORACLE)
+            // OR PARSE RESULTS HERE.
+            try
+            {
+                await connection.OpenAsync();
+                using(SqlDataReader reader = await sqlCommand.ExecuteReaderAsync())
                 {
-                    var id = reader.GetInt32(reader.GetOrdinal("Id"));
+
+                    logger.LogInformation("Query executed in connection class.");
+                    while (reader.Read())
+                   {
+                       var id = reader.GetInt32(reader.GetOrdinal("Id"));
+                   }
                 }
             }
+
+            catch(Exception e)
+            {
+                logger.LogError(e.Message);
+            }
+           
             
             connection.CloseAsync();
         }

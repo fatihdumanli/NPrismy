@@ -37,13 +37,13 @@ namespace NPrismy
         public async Task<IEnumerable<T>> Query()
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            logger.LogInformation("_sqlCommandBuilder resolved: ");
             var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>();
             logger.LogInformation("Query generated: " + sqlQuery);
 
             var connection = AutofacModule.Container.Resolve<IConnection>();
+            logger.LogInformation("Connection resolved");
             await connection.QueryAsync<T>(sqlQuery);
-
-
             return null;
         }
         
