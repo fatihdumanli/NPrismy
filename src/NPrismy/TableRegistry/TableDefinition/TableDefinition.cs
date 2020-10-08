@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using NPrismy.Exceptions;
 
 namespace NPrismy
 {
@@ -11,6 +13,7 @@ namespace NPrismy
         //PropertyName, ColumName mapping
         private List<KeyValuePair<string, string>> _columns;
         private string _tableName;
+        private string _schemaName;
 
         public TableDefinition()
         {   
@@ -27,7 +30,14 @@ namespace NPrismy
       
         internal string GetColumnNameFor(string propertyName)
         {
-            return "SAMPLECOLUMN";
+            var column = _columns.Where(c => c.Key == propertyName).SingleOrDefault();
+
+            if(column.Value == null)
+            {
+                throw new ColumnDefinitionNotFoundException(propertyName, _tableName);
+            }
+
+            return column.Value;
         }
 
         internal void AddColumnDefinition(string propName, string columnName)

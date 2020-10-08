@@ -5,6 +5,7 @@ namespace NPrismy
 {
     internal interface ISqlCommandBuilder
     {
+        string BuildReadQuery<T>();
         string BuildReadQuery<T>(Expression<Func<T, bool>> expr);
        
     }

@@ -22,7 +22,7 @@ namespace NPrismy.IOC
 
         public static ContainerBuilder ContainerBuilder { get; set; } = new ContainerBuilder();
 
-               
+            
         
     }
 }

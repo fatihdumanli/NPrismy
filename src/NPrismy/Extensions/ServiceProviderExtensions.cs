@@ -38,6 +38,11 @@ namespace NPrismy
             AutofacModule.ContainerBuilder.RegisterGeneric(typeof(TableDefinition<>));
 
             AutofacModule.ContainerBuilder.RegisterType<TableDefinitionBuilder>().As<ITableDefinitionBuilder>();
+
+            AutofacModule.ContainerBuilder.RegisterType<SqlCommandBuilder>().As<ISqlCommandBuilder>();
+
+            AutofacModule.ContainerBuilder.RegisterType<WhereBuilder>();
+
         }
 
 

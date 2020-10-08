@@ -11,9 +11,14 @@ namespace NPrismy
 {
     public class EntityTable<T> 
     {
+        //Singleton
         private ISqlCommandBuilder _sqlCommandBuilder;
         ILogger logger = AutofacModule.Container.Resolve<ILogger>();
+
+        //Transient / Scoped
         private IConnection connection = AutofacModule.Container.Resolve<IConnection>();
+
+        //Singleton
         private ITableDefinitionBuilder _tableDefinitionBuilder = AutofacModule.Container.Resolve<ITableDefinitionBuilder>();
 
         public EntityTable()
@@ -26,9 +31,23 @@ namespace NPrismy
             logger.LogInformation(" Entitytable class is initialized.");            
         }
 
+        public IEnumerable<T> Query()
+        {
+            _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>();
+            logger.LogInformation("Query generated: " + sqlQuery);
+
+
+            return null;
+        }
+        
         public IEnumerable<T> Query(Expression<Func<T, bool>> e)
         {
-            var sqlQuery = _sqlCommandBuilder.BuildReadQuery(e);
+            _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>(e);
+            logger.LogInformation("Query generated: " + sqlQuery);
+
+
             return null;
         }
 
