@@ -15,7 +15,6 @@ namespace NPrismy
         ILogger logger = AutofacModule.Container.Resolve<ILogger>();
         private IConnection connection = AutofacModule.Container.Resolve<IConnection>();
         private ITableDefinitionBuilder _tableDefinitionBuilder = AutofacModule.Container.Resolve<ITableDefinitionBuilder>();
-
         T[] objects;
 
         public EntityTable()
@@ -23,7 +22,8 @@ namespace NPrismy
             //Create table definition here.
             //Consumers should be able to override this definition later.
             var tableDefinition = _tableDefinitionBuilder.Build<T>();
-            
+            TableRegistry.Instance.RegisterTableDefinition<T>(tableDefinition);
+
             logger.LogInformation(" Entitytable class is initialized.");            
         }
 

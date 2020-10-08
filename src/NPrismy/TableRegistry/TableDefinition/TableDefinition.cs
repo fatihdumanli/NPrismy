@@ -2,7 +2,11 @@ using System.Collections.Generic;
 
 namespace NPrismy
 {
-    internal class TableDefinition<T>
+    internal class TableDefinition
+    {
+    }
+    
+    internal class TableDefinition<T> : TableDefinition
     {  
         //PropertyName, ColumName mapping
         private List<KeyValuePair<string, string>> _columns;
