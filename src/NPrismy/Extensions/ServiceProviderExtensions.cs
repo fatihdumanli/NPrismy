@@ -34,6 +34,12 @@ namespace NPrismy
 
             //Registering generic EntityTable<>
             AutofacModule.ContainerBuilder.RegisterGeneric(typeof(EntityTable<>));
+
+            AutofacModule.ContainerBuilder.RegisterGeneric(typeof(TableDefinition<>));
+
+            AutofacModule.ContainerBuilder.RegisterType<TableDefinitionBuilder>().As<ITableDefinitionBuilder>();
         }
+
+
     }
 }

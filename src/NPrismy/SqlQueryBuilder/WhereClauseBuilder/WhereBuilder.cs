@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Autofac;
+using NPrismy.IOC;
 
 namespace NPrismy
 {
@@ -11,33 +15,24 @@ namespace NPrismy
     */
     internal class WhereBuilder
     {
-        private readonly IProvider _provider;
-        private TableDefinition _tableDef;
-
-        public WhereBuilder(IProvider provider)
-        {
-            _provider = provider;
-        }
-
         public string ToSql<T>(Expression<Func<T, bool>> expression)
         {
-            _tableDef = _provider.GetTableDefinitionFor<T>();
-            return Recurse(expression.Body, true);
+            return Recurse<T>(expression.Body, true);
         }
 
-        private string Recurse(Expression expression, bool isUnary = false, bool quote = true)
+        private string Recurse<T>(Expression expression, bool isUnary = false, bool quote = true)
         {
             if (expression is UnaryExpression)
             {
                 var unary = (UnaryExpression)expression;
-                var right = Recurse(unary.Operand, true);
+                var right = Recurse<T>(unary.Operand, true);
                 return "(" + NodeTypeToString(unary.NodeType, right == "NULL") + " " + right + ")";
             }
             if (expression is BinaryExpression)
             {
                 var body = (BinaryExpression)expression;
-                var right = Recurse(body.Right);
-                return "(" + Recurse(body.Left) + " " + NodeTypeToString(body.NodeType, right == "NULL") + " " + right + ")";
+                var right = Recurse<T>(body.Right);
+                return "(" + Recurse<T>(body.Left) + " " + NodeTypeToString(body.NodeType, right == "NULL") + " " + right + ")";
             }
             if (expression is ConstantExpression)
             {
@@ -51,7 +46,7 @@ namespace NPrismy
                 if (member.Member is PropertyInfo)
                 {
                     var property = (PropertyInfo)member.Member;
-                    var colName = _tableDef.GetColumnNameFor(property.Name);
+                    var colName = AutofacModule.Container.ResolveOptional<TableDefinition<T>>().GetColumnNameFor(property.Name);
                     if (isUnary && member.Type == typeof(bool))
                     {
                         return "([" + colName + "] = 1)";
@@ -70,15 +65,15 @@ namespace NPrismy
                 // LIKE queries:
                 if (methodCall.Method == typeof(string).GetMethod("Contains", new[] { typeof(string) }))
                 {
-                    return "(" + Recurse(methodCall.Object) + " LIKE '%" + Recurse(methodCall.Arguments[0], quote: false) + "%')";
+                    return "(" + Recurse<T>(methodCall.Object) + " LIKE '%" + Recurse<T>(methodCall.Arguments[0], quote: false) + "%')";
                 }
                 if (methodCall.Method == typeof(string).GetMethod("StartsWith", new[] { typeof(string) }))
                 {
-                    return "(" + Recurse(methodCall.Object) + " LIKE '" + Recurse(methodCall.Arguments[0], quote: false) + "%')";
+                    return "(" + Recurse<T>(methodCall.Object) + " LIKE '" + Recurse<T>(methodCall.Arguments[0], quote: false) + "%')";
                 }
                 if (methodCall.Method == typeof(string).GetMethod("EndsWith", new [] {typeof(string)}))
                 {
-                    return "(" + Recurse(methodCall.Object) + " LIKE '%" + Recurse(methodCall.Arguments[0], quote: false) + "')";
+                    return "(" + Recurse<T>(methodCall.Object) + " LIKE '%" + Recurse<T>(methodCall.Arguments[0], quote: false) + "')";
                 }
                 // IN queries:
                 if (methodCall.Method.Name == "Contains")
@@ -109,7 +104,7 @@ namespace NPrismy
                     {
                         return ValueToString(false, true, false);
                     }
-                    return "(" + Recurse(property) + " IN (" + concated.Substring(0, concated.Length - 2) + "))";
+                    return "(" + Recurse<T>(property) + " IN (" + concated.Substring(0, concated.Length - 2) + "))";
                 }
                 throw new Exception("Unsupported method call: " + methodCall.Method.Name);
             }
@@ -126,7 +121,7 @@ namespace NPrismy
                 }
                 return (bool)value ? "1" : "0";
             }
-            return _provider.ValueToString(value, quote);
+            return WhereClauseValueFormatter.ValueToString(value, quote);
         }
 
         private static bool IsEnumerableType(Type type)
