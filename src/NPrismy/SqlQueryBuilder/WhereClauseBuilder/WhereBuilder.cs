@@ -46,7 +46,7 @@ namespace NPrismy
                 if (member.Member is PropertyInfo)
                 {
                     var property = (PropertyInfo)member.Member;
-                    var colName = AutofacModule.Container.ResolveOptional<TableDefinition<T>>().GetColumnNameFor(property.Name);
+                    var colName = TableRegistry.Instance.GetTableDefinition<T>().GetColumnNameFor(property.Name);
                     if (isUnary && member.Type == typeof(bool))
                     {
                         return "([" + colName + "] = 1)";

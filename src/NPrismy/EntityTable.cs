@@ -15,7 +15,6 @@ namespace NPrismy
         ILogger logger = AutofacModule.Container.Resolve<ILogger>();
         private IConnection connection = AutofacModule.Container.Resolve<IConnection>();
         private ITableDefinitionBuilder _tableDefinitionBuilder = AutofacModule.Container.Resolve<ITableDefinitionBuilder>();
-        T[] objects;
 
         public EntityTable()
         {
@@ -30,7 +29,7 @@ namespace NPrismy
         public IEnumerable<T> Query(Expression<Func<T, bool>> e)
         {
             var sqlQuery = _sqlCommandBuilder.BuildReadQuery(e);
-            return objects.AsEnumerable<T>();
+            return null;
         }
 
         private string _tableName 

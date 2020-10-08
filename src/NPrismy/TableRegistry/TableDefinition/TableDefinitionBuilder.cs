@@ -7,6 +7,7 @@ namespace NPrismy
     internal class TableDefinitionBuilder : ITableDefinitionBuilder
     {
         //Builds table's column definitions.
+        //Table name
         //Entity property name - database table column name mapping performed here.
         public TableDefinition<T> Build<T>()
         {

@@ -14,6 +14,7 @@ namespace NPrismy
             sb.Append("SELECT * FROM [] ");
             sb.Append(whereClause);
             return sb.ToString();          
+            
         }
     }
 }

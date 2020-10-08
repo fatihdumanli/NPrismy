@@ -10,12 +10,21 @@ namespace NPrismy
     {  
         //PropertyName, ColumName mapping
         private List<KeyValuePair<string, string>> _columns;
-        
+        private string _tableName;
+
         public TableDefinition()
         {   
+            _tableName = typeof(T).Name;
+
             if(_columns == null)
                 _columns = new List<KeyValuePair<string, string>>();
         }
+
+        internal string GetTableName()
+        {
+            return _tableName;
+        }
+      
         internal string GetColumnNameFor(string propertyName)
         {
             return "SAMPLECOLUMN";

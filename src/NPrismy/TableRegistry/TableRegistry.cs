@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using NPrismy.Exceptions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
@@ -34,7 +35,7 @@ namespace NPrismy
         public void RegisterTableDefinition<T>(TableDefinition<T> tableDefinition)
         {
             _tableDefinitions.Add(new KeyValuePair<Type, TableDefinition>(typeof(T), tableDefinition));          
-            logger.LogInformation("Table definition registered successfully for type: " + typeof(T).Name);
+            logger.LogInformation("Table definition registered successfully for type: " + typeof(T).Name + " table name: " + tableDefinition.GetTableName());
         }
 
 
@@ -44,7 +45,7 @@ namespace NPrismy
             
             if(def.Value == null)
             {
-                //TODO: throw new TableDefinitionNotFoundException
+                throw new TableDefinitionNotFoundException(nameof(T));
             }
 
             return def.Value as TableDefinition<T>;            
