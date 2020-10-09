@@ -36,7 +36,7 @@ namespace NPrismy
             }
         }
 
-
+        
         internal void RegisterTablesForDatabaseObject<T>()
         {
             logger.LogInformation("log from RegisterTablesForDatabaseObject");
@@ -49,7 +49,7 @@ namespace NPrismy
                 
                 if(propertyType.IsGenericType)
                 {
-                    var entityType = propertyType.GetGenericArguments()[0];
+                    var entityType = propertyType.GetGenericArguments()[0]; //EntityTable<T>
                     var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>().Build(entityType);
                     TableRegistry.Instance.RegisterTableDefinition(tableDefinition);
                 }                
@@ -59,20 +59,9 @@ namespace NPrismy
 
         private void RegisterTableDefinition(TableDefinition tableDefinition)
         {
-            try
-            {
-                _tableDefinitions.Add(new KeyValuePair<Type, TableDefinition>(tableDefinition.GetEntityType(), tableDefinition));         
-                logger.LogInformation("Table definition registered successfully for type: " + tableDefinition.GetEntityType() + " table name: " + tableDefinition.GetTableName()); 
-                logger.LogInformation(" TableDefinitions count: " + _tableDefinitions.Count);
-
-            }
-
-            catch(Exception e)
-            {
-                logger.LogError("cant add table definition to registry: " + e.Message);
-            }
-
-
+            _tableDefinitions.Add(new KeyValuePair<Type, TableDefinition>(tableDefinition.GetEntityType(), tableDefinition));         
+            logger.LogInformation("Table definition registered successfully for type: " + tableDefinition.GetEntityType() + " table name: " + tableDefinition.GetTableName()); 
+            logger.LogInformation(" TableDefinitions count: " + _tableDefinitions.Count);
         }
 
 

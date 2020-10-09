@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autofac;
 using NPrismy.Exceptions;
+using NPrismy.IOC;
+using NPrismy.Logging;
 
 namespace NPrismy
 {    
@@ -16,7 +19,7 @@ namespace NPrismy
         {   
             _entityType = entityType; 
             //Can be overrided by consumer.
-            _tableName = entityType.Name;
+            _tableName = entityType.Name.Pluralize();
 
             if(_columns == null)
                 _columns = new List<KeyValuePair<string, string>>();

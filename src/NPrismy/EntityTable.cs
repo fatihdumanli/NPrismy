@@ -21,16 +21,6 @@ namespace NPrismy
 
         public EntityTable()
         {
-
-            //Her scoped instance yaratıldığında table registration mı yapacağız?
-            //Başka bir deyişle, her session-+ için neden table definition yapalım?
-            //Bu işlem uygulama başlarken yapılmalı.
-
-            //Create table definition here.
-            //Consumers should be able to override this definition later.
-            //var tableDefinition = _tableDefinitionBuilder.Build<T>();
-            //TableRegistry.Instance.RegisterTableDefinition<T>(tableDefinition);
-
             logger.LogInformation(" Entitytable class is initialized.");            
         }
 
