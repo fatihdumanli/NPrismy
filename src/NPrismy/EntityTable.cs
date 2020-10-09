@@ -35,14 +35,14 @@ namespace NPrismy
             return results;
         }
         
-        public IEnumerable<T> Query(Expression<Func<T, bool>> e)
+        public async Task<IEnumerable<T>> Query(Expression<Func<T, bool>> e)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>(e);
-            logger.LogInformation("Query generated: " + sqlQuery);
-
-
-            return null;
+            
+            var connection = AutofacModule.Container.Resolve<IConnection>();
+            var results = await connection.QueryAsync<T>(sqlQuery);
+            return results;
         }
 
         private string _tableName 

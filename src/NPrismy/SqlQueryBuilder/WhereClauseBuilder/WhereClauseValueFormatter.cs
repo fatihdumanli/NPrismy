@@ -4,7 +4,7 @@ namespace NPrismy
     {
         internal static string ValueToString(object value, bool quote)
         {
-            return value.ToString();
+            return string.Format(value.ToString());
         }
     }
 }
