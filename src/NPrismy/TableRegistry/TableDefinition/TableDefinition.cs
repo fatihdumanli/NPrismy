@@ -11,9 +11,9 @@ namespace NPrismy
     internal class TableDefinition
     {  
         //PropertyName, ColumName mapping
-        private List<KeyValuePair<string, string>> _columns;
+        private List<ColumnDefinition> _columns;
         private string _tableName;
-        private string _schemaName;
+        private string _schemaName = "dbo";
         private Type _entityType;
         public TableDefinition(Type entityType)
         {   
@@ -22,7 +22,7 @@ namespace NPrismy
             _tableName = entityType.Name.Pluralize();
 
             if(_columns == null)
-                _columns = new List<KeyValuePair<string, string>>();
+                _columns = new List<ColumnDefinition>();
         }
 
       
@@ -32,24 +32,28 @@ namespace NPrismy
         }
         internal string GetTableName()
         {
-            return _tableName;
+            return string.Format("{0}.{1}", _schemaName, _tableName);
         }
       
+        internal List<ColumnDefinition> GetColumnDefinitions()
+        {
+            return _columns;
+        }
         internal string GetColumnNameFor(string propertyName)
         {
-            var column = _columns.Where(c => c.Key == propertyName).SingleOrDefault();
+            var column = _columns.Where(c => c.PropertyName == propertyName).SingleOrDefault();
 
-            if(column.Value == null)
+            if(column.ColumnName == null)
             {
                 throw new ColumnDefinitionNotFoundException(propertyName, _tableName);
             }
 
-            return column.Value;
+            return column.ColumnName;
         }
 
-        internal void AddColumnDefinition(string propName, string columnName)
+        internal void AddColumnDefinition(string propName, Type propertyType, string columnName)
         {
-            _columns.Add(new KeyValuePair<string, string>(propName, columnName));
+            _columns.Add(new ColumnDefinition(propName, propertyType, columnName));
         }
 
     }

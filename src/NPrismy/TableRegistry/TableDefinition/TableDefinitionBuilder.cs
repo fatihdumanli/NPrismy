@@ -19,7 +19,7 @@ namespace NPrismy
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
                 //Note that this is a default assignment. 
                 //Consumer assembly can ovveride this definition.
-                tableDefinition.AddColumnDefinition(prop.Name, prop.Name);
+                tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name);
             }
 
             return tableDefinition;
@@ -37,7 +37,7 @@ namespace NPrismy
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
                 //Note that this is a default assignment. 
                 //Consumer assembly can ovveride this definition.
-                tableDefinition.AddColumnDefinition(prop.Name, prop.Name);
+                tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name);
             }
         
             return tableDefinition;

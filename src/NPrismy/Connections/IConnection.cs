@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NPrismy
@@ -8,7 +9,7 @@ namespace NPrismy
 
         Task Close();
         
-        Task QueryAsync<T>(string query);
+        Task<IEnumerable<T>> QueryAsync<T>(string query);
 
     }
 }
