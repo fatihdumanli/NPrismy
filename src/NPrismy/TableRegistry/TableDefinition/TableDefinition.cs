@@ -35,9 +35,17 @@ namespace NPrismy
             return string.Format("{0}.{1}", _schemaName, _tableName);
         }
       
-        internal List<ColumnDefinition> GetColumnDefinitions()
+        internal List<ColumnDefinition> GetColumnDefinitions(bool includeIdentity = false)
         {
-            return _columns;
+            if(includeIdentity)
+            {
+                return _columns;
+            }
+
+            else
+            {
+                return _columns.Where(c => !c.IsIdentity).ToList();
+            }
         }
         internal string GetColumnNameFor(string propertyName)
         {
@@ -51,9 +59,9 @@ namespace NPrismy
             return column.ColumnName;
         }
 
-        internal void AddColumnDefinition(string propName, Type propertyType, string columnName)
+        internal void AddColumnDefinition(string propName, Type propertyType, string columnName, bool isIdentity = false)
         {
-            _columns.Add(new ColumnDefinition(propName, propertyType, columnName));
+            _columns.Add(new ColumnDefinition(propName, propertyType, columnName, isIdentity));
         }
 
     }

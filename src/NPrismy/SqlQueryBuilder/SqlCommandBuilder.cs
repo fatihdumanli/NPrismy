@@ -31,10 +31,8 @@ namespace NPrismy
             /* BEGIN: Obtaining entity values */
             foreach(var column in columns)
             {
-                logger.LogInformation("COLUMN PROPERTY NAME: " + column.PropertyName);
                 //May need to apply quotes
                 var objPropValue = obj.GetType().GetProperty(column.PropertyName).GetValue(obj);
-                logger.LogInformation("Entity PROPERTY VALUE: " + objPropValue);
 
                 if(objPropValue == null)
                 {
@@ -43,8 +41,6 @@ namespace NPrismy
 
                 else
                 {
-                    logger.LogInformation(objPropValue + " appended to values");
-
                     //Is entity value is non-numeric, it must be decorated with quotes ('')
                     if(objPropValue.ToString().IsNumeric())
                     {
