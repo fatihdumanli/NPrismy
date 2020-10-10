@@ -15,11 +15,24 @@ namespace NPrismy
         private string _tableName;
         private string _schemaName = "dbo";
         private Type _entityType;
-        public TableDefinition(Type entityType)
+        public TableDefinition(TableDefinitionOptions options)
         {   
-            _entityType = entityType; 
-            //Can be overrided by consumer.
-            _tableName = entityType.Name.Pluralize();
+            _entityType = options.EntityType;
+
+            if(!string.IsNullOrEmpty(options.TableName))
+            {
+                _tableName = options.TableName;
+            } 
+
+            else
+            {
+                _tableName = _entityType.Name.Pluralize();
+            }
+            
+            if(!string.IsNullOrEmpty(options.Schema))
+            {
+                _schemaName = options.Schema;
+            }
 
             if(_columns == null)
                 _columns = new List<ColumnDefinition>();

@@ -5,6 +5,6 @@ namespace NPrismy
     internal interface ITableDefinitionBuilder
     {
         TableDefinition Build<T>();
-        TableDefinition Build(Type entityType);
+        TableDefinition Build(Type entityType, string tableName = null, string schemaName = null);
     }
 }

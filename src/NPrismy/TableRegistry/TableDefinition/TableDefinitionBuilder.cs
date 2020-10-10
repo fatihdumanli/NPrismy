@@ -26,12 +26,16 @@ namespace NPrismy
 
         }
 
-        public TableDefinition Build(Type entityType)
+        public TableDefinition Build(Type entityType, string tableName = null, string schemaName = null)
         {
+            //Todo: configure for tableName and schemaName.
+            var tableDefinitionOptions = AutofacModule.Container.Resolve<TableDefinitionOptions>
+            (new NamedParameter("entityType", entityType), 
+            new NamedParameter("tableName", tableName),
+            new NamedParameter("schema", schemaName));
 
-            var tableDefinition = AutofacModule.Container.ResolveOptional<TableDefinition>(new NamedParameter("entityType", entityType));
+            var tableDefinition = AutofacModule.Container.ResolveOptional<TableDefinition>(new NamedParameter("options", tableDefinitionOptions));
     
-
             foreach(var prop in entityType.GetProperties())
             {
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.

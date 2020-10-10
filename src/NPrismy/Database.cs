@@ -92,7 +92,7 @@ namespace NPrismy
         
 
         /// <summary>
-        /// Define table columns, schemas by overriding this method.
+        /// Configure table name, columns and schema.
         /// </summary>
         protected abstract void ConfigureTables();
     }

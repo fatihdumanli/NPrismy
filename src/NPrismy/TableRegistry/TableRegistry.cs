@@ -45,12 +45,32 @@ namespace NPrismy
 
             foreach(var property in databaseProperties)
             {
+
+                string tableName = null, schemaName = null;
+
+                //Check for '[TableName]' attribute of EntityTable<T>
+                var tableNameAttribute = property.GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();                
+                if(tableNameAttribute != null)
+                {
+                    tableName = (tableNameAttribute as TableNameAttribute).TableName;
+                }
+
+                //Check for '[Schema]' attribute
+                var schemaAttribute = property.GetCustomAttributes(typeof(SchemaAttribute), false).FirstOrDefault();
+
+                if(schemaAttribute != null)
+                {
+                    schemaName = (schemaAttribute as SchemaAttribute).SchemaName;
+                }
+                                
+
                 var propertyType = property.PropertyType;
                 
                 if(propertyType.IsGenericType)
                 {
                     var entityType = propertyType.GetGenericArguments()[0]; //EntityTable<T>
-                    var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>().Build(entityType);
+                    var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>()
+                        .Build(entityType, tableName: tableName, schemaName: schemaName);
                     TableRegistry.Instance.RegisterTableDefinition(tableDefinition);
                 }                
             }             

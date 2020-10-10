@@ -13,7 +13,6 @@ namespace NPrismy
     {
         public static void AddNPrismy<T>(this IServiceCollection services, DatabaseOptions options) where T: Database
         {
-            
             AutofacModule.ContainerBuilder.RegisterType<IOLogger>().As<ILogger>();
 
             //Register database options as singleton (PersistanceProvider and connection string)
@@ -34,6 +33,8 @@ namespace NPrismy
             AutofacModule.ContainerBuilder.RegisterType<SqlCommandBuilder>().As<ISqlCommandBuilder>().SingleInstance();
 
             AutofacModule.ContainerBuilder.RegisterType<WhereBuilder>().SingleInstance();
+
+            AutofacModule.ContainerBuilder.RegisterType<TableDefinitionOptions>().InstancePerDependency();
 
             AutofacModule.ContainerBuilder.RegisterType<TableDefinition>();
 
