@@ -1,6 +1,6 @@
 namespace NPrismy.Logging
 {
-    public interface ILogger
+    internal interface ILogger
     {
         void LogInformation(string message);
 

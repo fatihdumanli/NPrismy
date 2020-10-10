@@ -5,7 +5,7 @@ using System.Linq;
 namespace NPrismy
 {
 
-    public static class PersistanceProviderFactory
+    internal static class PersistanceProviderFactory
     {
         private static List<KeyValuePair<PersistanceProvider, Type>> _providers 
             = new List<KeyValuePair<PersistanceProvider, Type>>()

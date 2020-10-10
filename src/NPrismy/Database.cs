@@ -7,6 +7,11 @@ using NPrismy.Logging;
 
 namespace NPrismy
 {
+
+    /// <summary>
+    /// A database abstraction.
+    /// This class must be inherited for each database connection.
+    /// </summary>
     public abstract class Database
     {
         private DatabaseOptions _options;
@@ -31,7 +36,10 @@ namespace NPrismy
 
         }
         
-        //Consumer assembly must specify their tables by overriding this method.
+        /// <summary>
+        /// Define table columns, schemas by overriding this method.
+        /// </summary>
+        /// <param name="entityTableBuilder"></param>
         protected abstract void ConfigureTables(EntityTableBuilder entityTableBuilder);
     }
     

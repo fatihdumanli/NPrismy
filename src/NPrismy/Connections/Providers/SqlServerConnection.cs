@@ -8,7 +8,7 @@ using NPrismy.Logging;
 
 namespace NPrismy
 {
-    public class SqlServerConnection 
+    internal class SqlServerConnection 
         : IConnection
     {
         private static SqlConnection connection;

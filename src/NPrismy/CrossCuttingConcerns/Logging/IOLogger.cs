@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NPrismy.Logging
 {
-    public class IOLogger : ILogger
+    internal class IOLogger : ILogger
     {        
         public IOLogger()
         {

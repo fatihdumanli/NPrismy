@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace NPrismy
 {
-    public interface IConnection
+    internal interface IConnection
     {
         Task Open();
 

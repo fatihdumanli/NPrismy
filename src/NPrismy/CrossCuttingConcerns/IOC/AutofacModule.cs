@@ -3,7 +3,7 @@ using Autofac;
 
 namespace NPrismy.IOC
 {
-    public static class AutofacModule
+    internal static class AutofacModule
     {
         private static ILifetimeScope _container;
         public static ILifetimeScope Container 

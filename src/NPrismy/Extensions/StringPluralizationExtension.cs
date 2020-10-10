@@ -6,7 +6,7 @@ namespace NPrismy
     //Copied from https://gist.github.com/andrewjk/3186582 and pasted here :)
     internal static class StringPluralizationExtension
     {
-        public static string Pluralize(this string text, int number = 2)
+        internal static string Pluralize(this string text, int number = 2)
         {
             if (number == 1)
             {

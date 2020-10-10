@@ -6,10 +6,10 @@ using NPrismy.Logging;
 
 namespace NPrismy
 {
-    public static class SqlDataReaderExtensions
+    internal static class SqlDataReaderExtensions
     {
         //TODO: Elaborate with DateTime, boolean etc...
-        public static object GetTypeValueNonGeneric(this SqlDataReader reader, Type entityPropertyType, int ordinal)
+        internal static object GetTypeValueNonGeneric(this SqlDataReader reader, Type entityPropertyType, int ordinal)
         {
             object value = null;
             
