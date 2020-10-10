@@ -19,7 +19,7 @@ namespace NPrismy
             connection = new SqlConnection(connStr);
         }
 
-        public Task BeginTransacionAsync()
+        public async Task BeginTransacionAsync()
         {
             throw new NotImplementedException();
         }

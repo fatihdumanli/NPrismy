@@ -20,12 +20,41 @@ namespace NPrismy
         //Singleton
         private ISqlCommandBuilder _sqlCommandBuilder;
         ILogger logger = AutofacModule.Container.Resolve<ILogger>();
+        public Database Database { get; internal set; }
 
         public EntityTable()
         {
-            logger.LogInformation(" Entitytable class is initialized.");            
+            logger.LogInformation(" Entitytable class is initialized.");    
         }
 
+
+        //uses transaction
+        public void Add(T entity)
+        {
+            //1. begin a transaction
+            //2. log this add operation to somewhere
+
+            //Detect parent object (Database) and access it's changeTracker.
+
+        }
+
+        //uses transaction
+        public void AddRange(IEnumerable<T> entities)
+        {
+            
+        }
+
+        //uses transaction
+        public void Update(T entity)
+        {
+
+        }
+
+        //Uses a transaction
+        public void Delete(T entity)
+        {
+
+        }
 
         /// <summary>
         /// Query the table without a where clause.
@@ -37,8 +66,7 @@ namespace NPrismy
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>();
 
-            var connection = AutofacModule.Container.Resolve<IConnection>();
-            var results = await connection.QueryAsync<T>(sqlQuery);
+            var results = await this.Database.Query<T>(sqlQuery);
 
             return results;
         }
@@ -53,8 +81,7 @@ namespace NPrismy
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>(e);
             
-            var connection = AutofacModule.Container.Resolve<IConnection>();
-            var results = await connection.QueryAsync<T>(sqlQuery);
+            var results = await this.Database.Query<T>(sqlQuery);
             return results;
         }
         

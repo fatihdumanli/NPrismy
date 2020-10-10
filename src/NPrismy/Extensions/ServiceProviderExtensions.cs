@@ -26,6 +26,7 @@ namespace NPrismy
             var connectionConcrete = PersistanceProviderFactory.GetProvider(options.Provider);
 
             //Register connection object to autofac container.
+            
             //Remember that Connection object constructors requires a connection string!!!
             AutofacModule.ContainerBuilder.RegisterType(connectionConcrete).As<IConnection>()
                 .WithParameter(new TypedParameter(typeof(string), options.ConnectionString));
