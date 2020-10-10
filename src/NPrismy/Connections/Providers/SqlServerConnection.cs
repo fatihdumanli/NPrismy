@@ -125,7 +125,19 @@ namespace NPrismy
                        foreach(var column in columnDefinitions)
                        {
                             var entityPropertyType = column.EntityPropertyType;
-                            var columnOrdinal = reader.GetOrdinal(column.ColumnName);
+
+                            int columnOrdinal = -1;
+
+                            try
+                            {
+                                columnOrdinal = reader.GetOrdinal(column.ColumnName);
+                            }
+
+                            catch(IndexOutOfRangeException)
+                            {
+                                throw new ColumnNotFoundException(typeof(T), entityPropertyName: column.PropertyName);
+                            }
+                            
                             var columnValue = reader.GetTypeValueNonGeneric(entityPropertyType, columnOrdinal);
                             record.GetType().GetProperty(column.PropertyName).SetValue(record, columnValue);
                        }
@@ -139,9 +151,10 @@ namespace NPrismy
 
             catch(Exception e)
             {
-                logger.LogError(e.Message);
+                logger.LogError("Exception from SqlServerConnection.QueryAsync(): " + e.Message);
             }
 
+    
            await connection.CloseAsync();
 
            logger.LogInformation("queryResults count: " + queryResults.Count);
