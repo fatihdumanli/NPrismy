@@ -45,7 +45,16 @@ namespace NPrismy
                 {
                     logger.LogInformation(objPropValue + " appended to values");
 
-                    values.Add(objPropValue.ToString());
+                    //Is entity value is numeric, it must be decorated with quotes ('')
+                    if(objPropValue.ToString().IsNumeric())
+                    {
+                        values.Add(objPropValue.ToString());
+                    }
+
+                    else
+                    {
+                        values.Add(objPropValue.ToString().DecorateWithQuotes());
+                    }
                 }
             }
             /* END: Obtaining entity values */
