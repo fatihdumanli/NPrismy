@@ -18,7 +18,10 @@ namespace NPrismy
     public abstract class Database
     {
         private DatabaseOptions _options;
-        internal ChangeTracker _changeTracker;
+
+        //Do not access this object from EntityTable<T> (remember aggregate pattern.)
+        //One ChangeTracker instance per Database object
+        private ChangeTracker _changeTracker;
         private IConnection _connection
         {
             get
@@ -33,6 +36,7 @@ namespace NPrismy
 
         public Database()
         {
+            this._changeTracker = new ChangeTracker();
             logger.LogInformation("Database object is instantiated: " + this.GetType().Name);
         }
 

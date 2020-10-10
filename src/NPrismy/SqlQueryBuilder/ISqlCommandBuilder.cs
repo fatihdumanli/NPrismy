@@ -7,6 +7,6 @@ namespace NPrismy
     {
         string BuildReadQuery<T>();
         string BuildReadQuery<T>(Expression<Func<T, bool>> expr);
-       
+        string BuildInsertQuery<T>(T obj);       
     }
 }

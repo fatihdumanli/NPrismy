@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Autofac;
@@ -31,6 +29,14 @@ namespace NPrismy
         //uses transaction
         public void Add(T entity)
         {
+            
+            _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            var insertQuery = _sqlCommandBuilder.BuildInsertQuery<T>(entity);
+
+            //add this insertquery to changeTracker
+
+            
+            logger.LogInformation("INSERT QUERY: " + insertQuery);
             //1. begin a transaction
             //2. log this add operation to somewhere
 
