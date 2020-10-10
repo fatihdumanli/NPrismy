@@ -19,9 +19,19 @@ namespace NPrismy
             connection = new SqlConnection(connStr);
         }
 
+        public Task BeginTransacionAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task Close()
         {
             await connection.CloseAsync();
+        }
+
+        public Task CommitTransactionAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Open()
@@ -72,6 +82,11 @@ namespace NPrismy
 
            logger.LogInformation("queryResults count: " + queryResults.Count);
            return queryResults;            
+        }
+
+        public Task RollBackTransactionAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,5 +11,11 @@ namespace NPrismy
         
         Task<IEnumerable<T>> QueryAsync<T>(string query);
 
+        Task BeginTransacionAsync();
+
+        Task CommitTransactionAsync();
+
+        Task RollBackTransactionAsync();
+
     }
 }
