@@ -31,6 +31,7 @@ namespace NPrismy
 
         public async Task<IEnumerable<T>> QueryAsync<T>(string query)
         {
+            logger.LogInformation("query to exexute: " + query);
             var sqlCommand = new SqlCommand(query, connection);
             
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
