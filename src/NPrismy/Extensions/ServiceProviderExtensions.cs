@@ -42,8 +42,6 @@ namespace NPrismy
             //Registering table definitions
             TableRegistry.Instance.RegisterTablesForDatabaseObject<T>();
 
-            AutofacModule.ContainerBuilder.RegisterType<EntityTableBuilder>().InstancePerDependency();
-
             //Registering generic EntityTable<>
             AutofacModule.ContainerBuilder.RegisterGeneric(typeof(EntityTable<>));
 

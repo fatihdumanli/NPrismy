@@ -94,8 +94,7 @@ namespace NPrismy
         /// <summary>
         /// Define table columns, schemas by overriding this method.
         /// </summary>
-        /// <param name="entityTableBuilder"></param>
-        protected abstract void ConfigureTables(EntityTableBuilder entityTableBuilder);
+        protected abstract void ConfigureTables();
     }
     
 }
