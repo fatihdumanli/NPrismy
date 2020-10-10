@@ -20,6 +20,16 @@ namespace NPrismy
             throw new System.NotImplementedException();
         }
 
+        public Task ExecuteQuery(string query)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool IsOpen()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task Open()
         {
             throw new System.NotImplementedException();

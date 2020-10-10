@@ -29,19 +29,9 @@ namespace NPrismy
         //uses transaction
         public void Add(T entity)
         {
-            
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
-            var insertQuery = _sqlCommandBuilder.BuildInsertQuery<T>(entity);
-
-            //add this insertquery to changeTracker
-
-            
-            logger.LogInformation("INSERT QUERY: " + insertQuery);
-            //1. begin a transaction
-            //2. log this add operation to somewhere
-
-            //Detect parent object (Database) and access it's changeTracker.
-
+            var insertQuery = _sqlCommandBuilder.BuildInsertQuery<T>(entity);     
+            this.Database.Insert(insertQuery);            
         }
 
         //uses transaction

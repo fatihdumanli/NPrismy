@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Autofac;
+using NPrismy.Exceptions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
@@ -13,15 +15,36 @@ namespace NPrismy
     {
         private static SqlConnection connection;
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
+        private SqlTransaction _currentTransaction;
+
         public SqlServerConnection(string connStr)
         {
             //test conn
             connection = new SqlConnection(connStr);
+            logger.LogInformation("SqlServerConnection: Created a new instance.");
         }
 
         public async Task BeginTransacionAsync()
         {
-            throw new NotImplementedException();
+            logger.LogInformation(" SqlServerConnection: Transaction beginning...");
+
+            if(_currentTransaction != null)
+            {
+                throw new TransactionAlreadyExistsException();
+            }
+
+            try
+            {
+                await connection.OpenAsync();
+                _currentTransaction = connection.BeginTransaction();
+                logger.LogInformation("SqlServerConnection.BeginTransactionAsync(): Transaction began. _currentTransaction is: " + _currentTransaction);
+            }
+
+            catch(Exception e)
+            {
+                logger.LogError("SqlServerConnection.BeginTransactionAsync(): Transaction begin failed: " + e.Message);
+            }
+          
         }
 
         public async Task Close()
@@ -29,9 +52,50 @@ namespace NPrismy
             await connection.CloseAsync();
         }
 
-        public Task CommitTransactionAsync()
+        public async Task CommitTransactionAsync()
         {
-            throw new NotImplementedException();
+            logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction...");
+
+            try
+            {
+                if(_currentTransaction == null)
+                {
+                    throw new TransactionNotFoundException();
+                }
+                
+                await _currentTransaction.CommitAsync();
+                await connection.CloseAsync();
+                logger.LogInformation("SqlServerConnection.CommitTransactionAsync(): Transaction committed successfully. Connection closed.");
+            }
+
+            catch(Exception e)
+            {
+                logger.LogError("CommitAsync Error: " + e.Message);
+            }
+        }
+
+        public async Task ExecuteQuery(string query)
+        {
+            var sqlCommand = new SqlCommand(query, connection);
+            sqlCommand.Transaction = _currentTransaction;
+            
+            logger.LogInformation(" SqlServerConnection: Executing query: " + query);
+            try
+            {
+                var result = await sqlCommand.ExecuteNonQueryAsync();
+                logger.LogInformation(" SqlServerConnection.ExecuteQuery(): Query executed, affected rows: " + result);
+            }
+
+            catch(Exception ex)
+            {
+                logger.LogError("SqlServerConnection.ExecuteQuery(): " + ex.Message);
+            }
+
+        }
+
+        public bool IsOpen()
+        {
+            return connection.State == System.Data.ConnectionState.Open;
         }
 
         public async Task Open()

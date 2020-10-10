@@ -22,21 +22,14 @@ namespace NPrismy
         //Do not access this object from EntityTable<T> (remember aggregate pattern.)
         //One ChangeTracker instance per Database object
         private ChangeTracker _changeTracker;
-        private IConnection _connection
-        {
-            get
-            {
-                //Needs instance per call.
-                //Connection per command.
-                return AutofacModule.Container.Resolve<IConnection>();
-            }
-        }
-
+        private IConnection _connection;
+        
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
 
         public Database()
         {
             this._changeTracker = new ChangeTracker();
+            this._connection = AutofacModule.Container.Resolve<IConnection>();
             logger.LogInformation("Database object is instantiated: " + this.GetType().Name);
         }
 
@@ -67,8 +60,24 @@ namespace NPrismy
 
         }
 
-        public void Commit()
+        public async void Commit()
         {
+            await _connection.BeginTransacionAsync();
+            
+            var queries = _changeTracker.GetQueries();
+            
+            foreach(var query in queries)
+            {
+                await _connection.ExecuteQuery(query);
+            }
+
+            await _connection.CommitTransactionAsync();            
+
+            //begin a transaction
+            //read queries from changetracker
+            //execute queries
+            //commit transaction
+            //dispose the changeTracker.
         }
 
         internal async Task<IEnumerable<T>> Query<T>(string query)
@@ -76,6 +85,12 @@ namespace NPrismy
            return await this._connection.QueryAsync<T>(query);
         }
         
+        internal void Insert(string query)
+        {
+            this._changeTracker.AddQuery(query);
+        }
+        
+
         /// <summary>
         /// Define table columns, schemas by overriding this method.
         /// </summary>
