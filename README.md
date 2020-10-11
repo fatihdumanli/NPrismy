@@ -97,5 +97,52 @@ Modify your controllers as accepts `WeatherForecastDatabase` (how you name it) a
 
 ### Query Data
 
+1. Querying all data from table.
+
+`var cities = await _database.Cities.Query();`
+
+2. Querying with where clause
+
+`var cities = await _database.Cities.Query(c => c.Name == 'Copenhagen');
+
+3. Getting by primary key
+
+`var city = await _database.Cities.FindByPrimaryKey(1); //Gets the city with ID '1' (or whatever the primary key)`
+
+
+### Insert Data
+
+```
+var city = new City(name: "Paris", country: "FR");
+_database.Cities.Add(city);
+_database.Commit(); //Don't forget to commit
+```
+
+### Update Data
+
+```
+var city = await _database.Cities.FindByPrimaryKey(10);
+city.Name = "Paris";
+_database.Cities.Update(city);
+_database.Commit();
+```
+
+### Delete Data
+
+1. Deleting with LINQ expression
+
+```
+_database.Cities.Delete(c => c.Name == "Copenhagen");
+_database.Commit();
+```
+
+2. Deleting by Primary Key
+
+```
+_database.Cities.Delete(1); //Deletes the city with ID 1
+_database.Commit();
+```
+
+
 
 ## Benchmark
