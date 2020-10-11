@@ -56,15 +56,8 @@ namespace NPrismy
                 else
                 {
                     //Is entity value is non-numeric, it must be decorated with quotes ('')
-                    if(objPropValue.ToString().IsNumeric())
-                    {
-                        values.Add(objPropValue.ToString());
-                    }
-
-                    else
-                    {
-                        values.Add(objPropValue.ToString().DecorateWithQuotes());
-                    }
+                    //DecorateWithQuotes() decides whether the value is numeric or not
+                    values.Add(objPropValue.ToString().DecorateWithQuotes());
                 }
             }
             /* END: Obtaining entity values */
@@ -95,6 +88,35 @@ namespace NPrismy
             return sb.ToString();          
         }
 
-     
+        public string BuildUpdateQuery<T>(T obj)
+        {
+            var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("UPDATE {0} ", tableDefinition.GetTableName()));
+            
+            var columns = tableDefinition.GetColumnDefinitions().ToList();
+
+            var columnValue = typeof(T).GetProperty(columns[0].PropertyName).GetValue(obj).ToString();
+             sb.Append(string.Format("SET [{0}] = {1}, ", columns[0].ColumnName, columnValue.DecorateWithQuotes()));  
+
+            for(int i = 1; i < columns.Count(); i++)
+            {
+                columnValue = typeof(T).GetProperty(columns[i].PropertyName).GetValue(obj).ToString();
+                sb.Append(string.Format("[{0}] = {1}", columns[i].ColumnName, columnValue.DecorateWithQuotes()));
+
+                if(i < columns.Count - 1)
+                {
+                    sb.Append(", ");
+                }
+            }
+                
+            /* BEGIN: Adding where clause with PK */
+            var pkColumn = tableDefinition.GetPrimaryKeyColumnDefinition();
+            var pkValue = typeof(T).GetProperty(pkColumn.PropertyName).GetValue(obj);
+            sb.Append(string.Format(" WHERE {0} = {1}", pkColumn.ColumnName, pkValue.ToString().DecorateWithQuotes()));
+            /* EMD: Adding where clause with PK */
+            
+            return sb.ToString();
+        }
     }
 }

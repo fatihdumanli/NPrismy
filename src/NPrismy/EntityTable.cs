@@ -40,6 +40,8 @@ namespace NPrismy
         public void Update(T entity)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            var updateQuery = _sqlCommandBuilder.BuildUpdateQuery<T>(entity);
+            this.Database.Update(updateQuery);
         }
 
         //Uses a transaction

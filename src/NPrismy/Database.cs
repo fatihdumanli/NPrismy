@@ -120,6 +120,11 @@ namespace NPrismy
         {
             this._changeTracker.AddQuery(query);
         }
+
+        internal void Update(string query)
+        {
+            this._changeTracker.AddQuery(query);
+        }
         
 
         internal void Delete(string query)

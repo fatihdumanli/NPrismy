@@ -48,6 +48,13 @@ namespace NPrismy
             return string.Format("{0}.{1}", _schemaName, _tableName);
         }
       
+
+        internal ColumnDefinition GetPrimaryKeyColumnDefinition()
+        {
+            var pkColumn = _columns.Where(c => c.IsPrimaryKey).SingleOrDefault();
+            return pkColumn;
+        }
+
         internal IEnumerable<ColumnDefinition> GetColumnDefinitions(bool includeIdentity = false, bool includeNavigationProperties = false)
         {
 
