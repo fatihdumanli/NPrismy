@@ -1,6 +1,6 @@
 # NPrismy
 
-** *These repository is under construction. This is a draft Readme.* **
+** *This repository is under construction. This is a draft Readme.* **
 
 NPrismy is lightweight ORM for ASP.NET Core Web Applications. 
 
