@@ -10,10 +10,10 @@ NPrismy is lightweight ORM for ASP.NET Core Web Applications.
 
 ## Table Of Contents
 1. [Features](#features)
-2. Installation
-3. Usage
-4. Examples
-5. Benchmarks
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Examples](#examples)
+5. [Benchmark](#benchmark)
 
 ## Features
 * Simple CRUD operations with sugar syntax.
@@ -93,6 +93,9 @@ Modify your controllers as accepts `WeatherForecastDatabase` (how you name it) a
 
 `var lovelyCities = _db.Cities.Query(c => c.Name == "Istanbul" || c.Name == "Copenhagen");`
 
-### Examples
+## Examples
 
-#### Query Data
+### Query Data
+
+
+## Benchmark
