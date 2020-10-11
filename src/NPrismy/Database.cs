@@ -91,6 +91,7 @@ namespace NPrismy
             {
                 var result = await _connection.ExecuteScalar(entityChange.Query);
                 //TODO: set the entityChange.Item's Id = result.
+                
                 logger.LogInformation("Database.Commit(): ExecuteScalar() called. Result: " + result);
                 
             }

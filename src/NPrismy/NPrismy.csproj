@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Fatih Dumanli</Authors>
+    <Description>A lightweight ORM framework for .NET Core applications.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/fatihdumanli/NPrismy</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fatihdumanli/NPrismy</RepositoryUrl>
+    <PackageIcon>nprismy-logo.png</PackageIcon>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,6 +18,13 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
     <PackageReference Include="Newtonsoft.json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Downloads\nprismy-logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
