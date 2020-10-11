@@ -27,11 +27,13 @@ namespace NPrismy
 
 
         //uses transaction
-        public void Add(T entity)
+        //TODO: Return the entity with database generated ID
+        public T Add(T entity)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var insertQuery = _sqlCommandBuilder.BuildInsertQuery<T>(entity);     
-            this.Database.Insert(insertQuery);            
+            this.Database.Insert(insertQuery);         
+            return entity;   
         }
 
         //uses transaction
@@ -47,9 +49,11 @@ namespace NPrismy
         }
 
         //Uses a transaction
-        public void Delete(T entity)
+        public void Delete(Expression<Func<T, bool>> expression)
         {
-
+            _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            var deleteQuery = _sqlCommandBuilder.BuildDeleteQuery<T>(expression);
+            this.Database.Delete(deleteQuery);
         }
 
         /// <summary>

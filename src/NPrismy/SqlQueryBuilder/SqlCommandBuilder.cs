@@ -13,6 +13,19 @@ namespace NPrismy
     {
         private WhereBuilder _whereBuilder = AutofacModule.Container.Resolve<WhereBuilder>();
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
+
+        public string BuildDeleteQuery<T>(Expression<Func<T, bool>> expression)
+        {
+            var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("DELETE FROM {0}", tableDefinition.GetTableName()));
+            var whereClause = _whereBuilder.ToSql<T>(expression);
+            sb.Append(" WHERE ");
+            sb.Append(whereClause);
+            return sb.ToString();
+        }
+
         public string BuildInsertQuery<T>(T obj)
         {
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();

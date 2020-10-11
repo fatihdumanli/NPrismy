@@ -125,6 +125,12 @@ namespace NPrismy
         }
         
 
+        internal void Delete(string query)
+        {
+            logger.LogInformation("Delete query: " + query + " added to changeTracker.");
+            this._changeTracker.AddQuery(query);
+        }
+
         /// <summary>
         /// Configure table name, columns and schema.
         /// </summary>
