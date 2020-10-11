@@ -1,10 +1,19 @@
-# NPrismy
+# NPrismy - A Lightweight .NET Core ORM Framework
 
 ** *This repository is under construction. This is a draft Readme.* **
 
 NPrismy is lightweight ORM for ASP.NET Core Web Applications. 
 
 - [ ] Add ChangeTracker.
+- [ ] Add MySql support
+- [ ] Add Oracle Db support
+
+## Table Of Contents
+1. [Features](#features)
+2. Installation
+3. Usage
+4. Examples
+5. Benchmarks
 
 ## Features
 * Simple CRUD operations with sugar syntax.
@@ -12,12 +21,18 @@ NPrismy is lightweight ORM for ASP.NET Core Web Applications.
 * Customized entity mappings
 * Managing persistance concerns with a high level language
 
-## Getting Started
-
-### Installation
-Install NPrismy NuGet package by executing following command.
+## Installation
+Install NPrismy NuGet package by executing following command on .NET Core CLI:
 
 `dotnet add package NPrismy`
+
+and
+
+`PM> Install-Package NPrismy` on NuGet Package Manager Console.
+
+## Usage
+
+Step by step initialization.
 
 ### 1) Create a Database class
 
@@ -78,6 +93,6 @@ Modify your controllers as accepts `WeatherForecastDatabase` (how you name it) a
 
 `var lovelyCities = _db.Cities.Query(c => c.Name == "Istanbul" || c.Name == "Copenhagen");`
 
-### Wiki
+### Examples
 
-More examples can be found on [NPrismy wiki](#).
+#### Query Data
