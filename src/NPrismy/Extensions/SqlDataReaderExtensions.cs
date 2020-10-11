@@ -17,14 +17,23 @@ namespace NPrismy
             if(entityPropertyType == typeof(Int32))
             {
                 value = reader.GetInt32(ordinal);
+                return value;
             }
 
-            if(entityPropertyType == typeof(String))
+            else if(entityPropertyType == typeof(String))
             {
-                value = reader.GetString(ordinal);            
+                value = reader.GetString(ordinal);    
+                return value;        
+            }
+
+            else if(entityPropertyType == typeof(DateTime))
+            {
+                value = reader.GetDateTime(ordinal);
+                return value;
             }
 
             return value;
+
         }
     }
 }

@@ -112,7 +112,7 @@ namespace NPrismy
             var sqlCommand = new SqlCommand(query, connection);
             
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
-            var columnDefinitions = tableDefinition.GetColumnDefinitions();
+            var columnDefinitions = tableDefinition.GetColumnDefinitions(includeIdentity: true);
 
             IList<T> queryResults = new List<T>();
 
@@ -127,6 +127,7 @@ namespace NPrismy
 
                        foreach(var column in columnDefinitions)
                        {
+                           logger.LogInformation("column: " + column.ColumnName);
                             var entityPropertyType = column.EntityPropertyType;
 
                             int columnOrdinal = -1;
