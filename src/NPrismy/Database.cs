@@ -84,9 +84,6 @@ namespace NPrismy
             {
                 logger.LogError("Database::ctor: " + e.Message);
             }
-
-           
-
         }
 
         public async void Commit()

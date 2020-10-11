@@ -78,9 +78,17 @@ namespace NPrismy
             return column.ColumnName;
         }
 
-        internal void AddColumnDefinition(string propName, Type propertyType, string columnName, bool isIdentity = false, bool IsNavigationProperty = false)
+        internal void AddColumnDefinition(string propName, 
+            Type propertyType, 
+            string columnName, 
+            bool isPk = false,
+            bool isIdentity = false,
+            bool IsNavigationProperty = false)
         {
-            _columns.Add(new ColumnDefinition(propName, propertyType, columnName, isIdentity, IsNavigationProperty: IsNavigationProperty));
+            _columns.Add(new ColumnDefinition(propName, propertyType, columnName,
+                isPrimaryKey: isPk,
+                isIdentity: isIdentity, 
+                IsNavigationProperty: IsNavigationProperty));
         }
 
     }

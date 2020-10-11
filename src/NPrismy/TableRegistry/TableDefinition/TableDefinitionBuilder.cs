@@ -9,25 +9,10 @@ namespace NPrismy
 {
     internal class TableDefinitionBuilder : ITableDefinitionBuilder
     {
+      
         //Builds table's column definitions.
         //Table name
         //Entity property name - database table column name mapping performed here.
-        public TableDefinition Build<T>()
-        {
-            var tableDefinition = (TableDefinition) AutofacModule.Container.ResolveOptional<TableDefinition>(new NamedParameter("entityType", typeof(T)));
-
-            foreach(var prop in typeof(T).GetProperties())
-            {
-                //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
-                //Note that this is a default assignment. 
-                //Consumer assembly can ovveride this definition.
-                tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name, isIdentity: prop.Name.ToLower().Equals("id"));
-            }
-
-            return tableDefinition;
-
-        }
-
         public TableDefinition Build(Type entityType, string tableName = null, string schemaName = null)
         {
             //Todo: configure for tableName and schemaName.
@@ -43,9 +28,9 @@ namespace NPrismy
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
                 //Note that this is a default assignment. 
                 //Consumer assembly can ovveride this definition.
-                AutofacModule.Container.Resolve<ILogger>().LogInformation("TABLEDEFINITIONBUILDER: column " + prop.Name + " type: " + prop.PropertyType.Name);
                 tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name, 
-                    isIdentity: prop.Name.ToUpper().Equals("ID"),
+                    isPk: prop.Name.ToUpper().Equals("ID"), //default
+                    isIdentity: prop.Name.ToUpper().Equals("ID"), //default
                     IsNavigationProperty: !(prop.PropertyType.IsPrimitive  || prop.PropertyType.IsValueType || prop.PropertyType == typeof(string)));
             }
         

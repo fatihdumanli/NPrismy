@@ -37,15 +37,9 @@ namespace NPrismy
         }
 
         //uses transaction
-        public void AddRange(IEnumerable<T> entities)
-        {
-            
-        }
-
-        //uses transaction
         public void Update(T entity)
         {
-
+            _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
         }
 
         //Uses a transaction
