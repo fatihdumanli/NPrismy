@@ -32,9 +32,11 @@ public class WeatherForecastDatabase : NPrismy.Database
 ### 2) Add NPrismy support
 
 Insert the following code to your Startup.cs ConfigureServices() method to register your database object to ServiceCollection. 
-`
-services.AddNPrismy<WeatherForecastDatabase>().UseProvider(PersistanceProvider.SqlServer).ConnectionString("#connstr#");
-`
+```
+services.AddNPrismy<WeatherForecastDatabase>()
+        .UseProvider(PersistanceProvider.SqlServer)
+        .ConnectionString("#your-connection-string#");
+```
 
 1. Specify the connection string by passing it to `ConnectionString()` method.  
 2. Specify the your persistance provider (SqlServer, Oracle DB, MySql) by calling `UseProvider()` method. (ONLY MICROSOFT SQL SERVER SUPPORTED AT THE MOMENT)
@@ -70,15 +72,12 @@ public class WeatherForecastDatabase : NPrismy.Database
 
 }   
 ```
-
 ### 5) Do your CRUD!
 
 Modify your controllers as accepts `WeatherForecastDatabase` (how you name it) and you're done. Querying data can be performed as following:
 
 `var lovelyCities = _db.Cities.Query(c => c.Name == "Istanbul" || c.Name == "Copenhagen");`
 
-## Contrubuting
+### Wiki
 
-## Credits 
-
-## Licence
+More examples can be found on [NPrismy wiki](#).
