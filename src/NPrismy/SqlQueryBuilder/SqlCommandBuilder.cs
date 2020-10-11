@@ -26,6 +26,17 @@ namespace NPrismy
             return sb.ToString();
         }
 
+        public string BuildFindByPrimaryKeyQuery<T>(object pkValue)
+        {
+            var tableDefinition= TableRegistry.Instance.GetTableDefinition<T>();
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("SELECT * FROM {0} ", tableDefinition.GetTableName()));
+            sb.Append(" WHERE ");       
+            var pkColumnn = tableDefinition.GetPrimaryKeyColumnDefinition();
+            sb.Append(string.Format("{0} = {1}", pkColumnn.ColumnName, pkValue.ToString().DecorateWithQuotes()));
+            return sb.ToString();
+        }
+
         public string BuildInsertQuery<T>(T obj)
         {
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
@@ -47,7 +58,6 @@ namespace NPrismy
             {
                 //May need to apply quotes
                 var objPropValue = obj.GetType().GetProperty(column.PropertyName).GetValue(obj);
-                logger.LogInformation(column.ColumnName + " is navigation: " + column.IsNavigationProperty);
                 if(objPropValue == null)
                 {
                     values.Add("null");

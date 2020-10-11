@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Autofac;
@@ -25,6 +26,15 @@ namespace NPrismy
             logger.LogInformation(" Entitytable class is initialized.");    
         }
 
+
+        public async Task<T> FindByPrimaryKey(object value)
+        {
+            _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            var readQuery = _sqlCommandBuilder.BuildFindByPrimaryKeyQuery<T>(pkValue: value);    
+            var queryResult = await this.Database.Query<T>(query: readQuery);  
+            var result = queryResult.SingleOrDefault();
+            return result;
+        }
 
         //uses transaction
         //TODO: Return the entity with database generated ID
