@@ -26,6 +26,17 @@ namespace NPrismy
             return sb.ToString();
         }
 
+        public string BuildDeleteQuery<T>(object primaryKey)
+        {
+            var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
+            var pkColumn = tableDefinition.GetPrimaryKeyColumnDefinition();
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("DELETE FROM {0} ", tableDefinition.GetTableName()));
+            sb.Append(string.Format("WHERE {0} = {1}", pkColumn.ColumnName, primaryKey.ToString().DecorateWithQuotes()));
+            return sb.ToString();
+        }
+
         public string BuildFindByPrimaryKeyQuery<T>(object pkValue)
         {
             var tableDefinition= TableRegistry.Instance.GetTableDefinition<T>();

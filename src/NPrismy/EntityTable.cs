@@ -62,6 +62,14 @@ namespace NPrismy
             this.Database.Delete(deleteQuery);
         }
 
+
+        public void Delete(object primaryKey)
+        {
+            _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
+            var deleteQuery = _sqlCommandBuilder.BuildDeleteQuery<T>(primaryKey);
+            this.Database.Delete(deleteQuery);
+        }
+
         /// <summary>
         /// Query the table without a where clause.
         /// Note that that method will return all of the records without a filter.
