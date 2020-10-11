@@ -26,10 +26,12 @@ namespace NPrismy
         private IConnection _connection;
         
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
-
+        
+        //Property (EntityTable<>) instantiation must be performed here!
         public Database()
         {
-            try
+
+             try
             {
                 this._changeTracker = new ChangeTracker();
                 this._connection = AutofacModule.Container.Resolve<IConnection>();
@@ -40,21 +42,14 @@ namespace NPrismy
             {
                 logger.LogError("ERROR: " + e.Message);
             }
-           
-        }
 
-        
-        //Property (EntityTable<>) instantiation must be performed here!
-        public Database(DatabaseOptions options) : this()
-        {
-            this._options = options;  
 
+            this._options = AutofacModule.Container.Resolve<DatabaseOptions>();  
             if(_options == null)
             {
                throw new DatabaseNotConfiguredException(this.GetType());
             }
 
-            logger.LogInformation(options.ToString());
 
             try
             {
@@ -136,10 +131,6 @@ namespace NPrismy
             this._changeTracker.AddItem(query);
         }
 
-        /// <summary>
-        /// Configure table name, columns and schema.
-        /// </summary>
-        protected abstract void ConfigureTables();
     }
     
 }

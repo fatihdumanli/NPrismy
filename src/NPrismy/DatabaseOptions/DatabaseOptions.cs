@@ -1,17 +1,19 @@
 namespace NPrismy
 {
-    public class DatabaseOptions
+    internal class DatabaseOptions
     {
-        private DatabaseOptions() {}
-
-        public DatabaseOptions(PersistanceProvider provider, string connString)
+        internal DatabaseOptions()
+        {
+            
+        }
+        internal DatabaseOptions(PersistanceProvider provider, string connString)
         {
             ConnectionString = connString;
             Provider = provider;
         }
 
-        public PersistanceProvider Provider { get; private set; }
-        public string ConnectionString { get; private set; }
+        public PersistanceProvider Provider { get; internal set; }
+        public string ConnectionString { get; internal set; }
         
     }
 }
