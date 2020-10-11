@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NPrismy": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\fatih\\source\\repos\\workflow\\src\\Services\\ProcessDefinition\\ProcessDefinitions.API\\bin\\Debug\\netcoreapp3.1\\ProcessDefinition.exe"
+    }
+  }
+}

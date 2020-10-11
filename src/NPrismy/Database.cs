@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Autofac;
 using Newtonsoft.Json;
+using NPrismy.CrossCuttingConcerns.Exceptions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
@@ -28,9 +29,18 @@ namespace NPrismy
 
         public Database()
         {
-            this._changeTracker = new ChangeTracker();
-            this._connection = AutofacModule.Container.Resolve<IConnection>();
-            logger.LogInformation("Database object is instantiated: " + this.GetType().Name);
+            try
+            {
+                this._changeTracker = new ChangeTracker();
+                this._connection = AutofacModule.Container.Resolve<IConnection>();
+                logger.LogInformation("Database object is instantiated SUCCESSFULLY: " + this.GetType().Name);
+            }
+
+            catch(Exception e)
+            {
+                logger.LogError("ERROR: " + e.Message);
+            }
+           
         }
 
         
@@ -39,24 +49,43 @@ namespace NPrismy
         {
             this._options = options;  
 
-            /* BEGIN: Injecting this database object to EntityTable<T>'s 'Database' property */       
-            var properties = this.GetType().GetProperties();
-            foreach(var property in properties)
-            {   
-                /* BEGIN: Intantiating EntityTable<T> property of Database object */
-                var propertyName = property.Name;
-                var propertyType = property.PropertyType;
-                var propertyGenericArgument = propertyType.GetGenericArguments()[0];
-                var genericType = typeof(EntityTable<>).MakeGenericType(propertyGenericArgument);
-                this.GetType().GetProperty(propertyName).SetValue(this, Activator.CreateInstance(genericType));
-                /* BEGIN: Intantiating EntityTable<T> property of Database object */
+            if(_options == null)
+            {
+               throw new DatabaseNotConfiguredException(this.GetType());
+            }
+
+            logger.LogInformation(options.ToString());
+
+            try
+            {
+                /* BEGIN: Injecting this database object to EntityTable<T>'s 'Database' property */       
+                var properties = this.GetType().GetProperties();
+                logger.LogInformation(properties.ToString());
+                foreach(var property in properties)
+                {   
+                    /* BEGIN: Intantiating EntityTable<T> property of Database object */
+                    var propertyName = property.Name;
+                    logger.LogInformation(propertyName);
+                    var propertyType = property.PropertyType;
+                    var propertyGenericArgument = propertyType.GetGenericArguments()[0];
+                    var genericType = typeof(EntityTable<>).MakeGenericType(propertyGenericArgument);
+                    this.GetType().GetProperty(propertyName).SetValue(this, Activator.CreateInstance(genericType));
+                    /* BEGIN: Intantiating EntityTable<T> property of Database object */
                 
                 //Injecting EntityTable<T>'s Database property to this object
                 propertyType.GetProperty("Database")
                     .SetValue(this.GetType().GetProperty(propertyName).GetValue(this), this);
             }
 
-            /* END: Injecting this database object to EntityTable<T>'s 'Database' property */       
+              /* END: Injecting this database object to EntityTable<T>'s 'Database' property */       
+            }
+
+            catch(Exception e)
+            {
+                logger.LogError("Database::ctor: " + e.Message);
+            }
+
+           
 
         }
 
@@ -82,6 +111,11 @@ namespace NPrismy
 
         internal async Task<IEnumerable<T>> Query<T>(string query)
         {
+           if(_connection == null)
+           {
+               throw new ActiveConnectionNotFoundException("An error has occured when trying to query database. The connection object is null.");
+           }
+
            return await this._connection.QueryAsync<T>(query);
         }
         

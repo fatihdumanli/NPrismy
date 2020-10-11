@@ -23,5 +23,12 @@ namespace NPrismy.Logging
             var finalMessage = string.Format(" [INFO] [{0}]: {1}", DateTime.UtcNow, message);
             System.IO.File.AppendAllTextAsync(PackageSettings.LogDirectory, finalMessage);
         }
+
+        public void LogWarning(string message)
+        {
+            message += "\n";
+            var finalMessage = string.Format(" [WARN] [{0}]: {1}", DateTime.UtcNow, message);
+            System.IO.File.AppendAllTextAsync(PackageSettings.LogDirectory, finalMessage);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace NPrismy.Logging
     {
         void LogInformation(string message);
 
+        void LogWarning(string message);
         void LogError(string errorMessage);
     }
 }

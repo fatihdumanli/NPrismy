@@ -43,6 +43,7 @@ namespace NPrismy
             catch(Exception e)
             {
                 logger.LogError("SqlServerConnection.BeginTransactionAsync(): Transaction begin failed: " + e.Message);
+                throw e;
             }
           
         }
@@ -71,6 +72,7 @@ namespace NPrismy
             catch(Exception e)
             {
                 logger.LogError("CommitAsync Error: " + e.Message);
+                throw e;
             }
         }
 
@@ -89,6 +91,7 @@ namespace NPrismy
             catch(Exception ex)
             {
                 logger.LogError("SqlServerConnection.ExecuteQuery(): " + ex.Message);
+                throw ex;
             }
 
         }
@@ -135,7 +138,9 @@ namespace NPrismy
 
                             catch(IndexOutOfRangeException)
                             {
-                                throw new ColumnNotFoundException(typeof(T), entityPropertyName: column.PropertyName);
+                                logger.LogWarning(string.Format("A property named {0} defined in the {1} entity class, but column is not found in the table. Skipping this property...", column.PropertyName, typeof(T).Name));
+                                continue;
+                                //throw new ColumnNotFoundException(typeof(T), entityPropertyName: column.PropertyName);
                             }
                             
                             var columnValue = reader.GetTypeValueNonGeneric(entityPropertyType, columnOrdinal);
@@ -152,6 +157,7 @@ namespace NPrismy
             catch(Exception e)
             {
                 logger.LogError("Exception from SqlServerConnection.QueryAsync(): " + e.Message);
+                throw e;
             }
 
     
