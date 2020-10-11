@@ -13,7 +13,7 @@ namespace NPrismy
     {
         public static void AddNPrismy<T>(this IServiceCollection services, DatabaseOptions options) where T: Database
         {
-            AutofacModule.ContainerBuilder.RegisterType<IOLogger>().As<ILogger>();
+            AutofacModule.ContainerBuilder.RegisterType<DummyLogger>().As<ILogger>();
 
             //Register database options as singleton (PersistanceProvider and connection string)
             services.AddSingleton<DatabaseOptions>(options);
