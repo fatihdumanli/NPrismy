@@ -1,7 +1,5 @@
 # NPrismy - A Lightweight .NET Core ORM Framework
 
-** *This repository is under construction. This is a draft Readme.* **
-
 ![NPrismy](https://raw.githubusercontent.com/fatihdumanli/NPrismy/master/nprismy-logo.png)
 
 NPrismy is lightweight ORM for ASP.NET Core Web Applications. 
