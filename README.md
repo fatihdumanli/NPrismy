@@ -7,6 +7,7 @@ NPrismy is lightweight ORM for ASP.NET Core Web Applications.
 - [ ] Add ChangeTracker.
 - [ ] Add MySql support
 - [ ] Add Oracle Db support
+- [ ] Add benchmark results
 
 ## Table Of Contents
 1. [Features](#features)
