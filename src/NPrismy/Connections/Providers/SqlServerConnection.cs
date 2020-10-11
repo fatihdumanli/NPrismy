@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Autofac;
+using Microsoft.Data.SqlClient;
 using NPrismy.Exceptions;
 using NPrismy.IOC;
 using NPrismy.Logging;
@@ -94,6 +93,26 @@ namespace NPrismy
                 throw ex;
             }
 
+        }
+
+        public async Task<object> ExecuteScalar(string query)
+        {
+            var sqlCommand = new SqlCommand(query, connection);
+            sqlCommand.Transaction = _currentTransaction;
+
+            logger.LogInformation(" SqlServerConnection: Executing query: " + query);
+            try
+            {
+                var result = await sqlCommand.ExecuteScalarAsync();
+                logger.LogInformation(" SqlServerConnection.ExecuteScalar(): Query executed. Result: " + result);
+                return result;
+            }
+
+            catch(Exception ex)
+            {
+                logger.LogError("SqlServerConnection.ExecuteScalar(): " + ex.Message);
+                throw ex;
+            }
         }
 
         public bool IsOpen()

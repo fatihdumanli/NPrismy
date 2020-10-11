@@ -5,26 +5,51 @@ using NPrismy.Logging;
 
 namespace NPrismy
 {
+
+    internal class ChangeTrackerItem
+    {
+        public object Item { get; set; }     
+        public string Query { get; set; }   
+
+        public ChangeTrackerItem(object item, string query)
+        {
+            this.Item = item;
+            this.Query = query;            
+        }
+
+        public ChangeTrackerItem(string query)
+        {
+            this.Query = query;            
+        }
+    }
+
     internal class ChangeTracker
     {
-        private List<string> queries;
+        private List<ChangeTrackerItem> items = new List<ChangeTrackerItem>();
 
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
         public ChangeTracker()
         {
-            queries = new List<string>();
             logger.LogInformation("Instantiated a new ChangeTracker.");
         }
-        
-        public void AddQuery(string query)
+
+        internal IEnumerable<ChangeTrackerItem> GetChanges()
         {
-            this.queries.Add(query);
+            return items;
         }
 
-        public IEnumerable<string> GetQueries()
+        internal void AddItem(string query)
         {
-            return queries;
+            var item = new ChangeTrackerItem(query);
+            items.Add(item);            
         }
+        internal void AddItem(object entity, string query)
+        {
+            var item = new ChangeTrackerItem(entity, query);
+            this.items.Add(item);
+        }
+        
+        
 
     }
 }

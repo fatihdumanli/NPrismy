@@ -1,6 +1,6 @@
 using System;
-using System.Data.SqlClient;
 using Autofac;
+using Microsoft.Data.SqlClient;
 using NPrismy.IOC;
 using NPrismy.Logging;
 

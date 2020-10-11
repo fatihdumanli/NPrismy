@@ -12,6 +12,7 @@ namespace NPrismy
         
         Task<IEnumerable<T>> QueryAsync<T>(string query);
         Task ExecuteQuery(string query);
+        Task<object> ExecuteScalar(string query);
         Task BeginTransacionAsync();
 
         Task CommitTransactionAsync();

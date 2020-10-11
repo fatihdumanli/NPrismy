@@ -72,6 +72,10 @@ namespace NPrismy
             }
             /* END: Obtaining entity values */
             sb.Append(string.Format("( {0} )", string.Join(',', values)));
+
+
+            /* BEGIN: Adding some SQL statement to obtain database-generated id */
+            sb.Append("; SELECT SCOPE_IDENTITY();");
             return sb.ToString();           
 
         }

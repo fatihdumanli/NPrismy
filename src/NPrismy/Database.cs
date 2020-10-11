@@ -90,11 +90,14 @@ namespace NPrismy
         {
             await _connection.BeginTransacionAsync();
             
-            var queries = _changeTracker.GetQueries();
+            var changes = _changeTracker.GetChanges();
             
-            foreach(var query in queries)
+            foreach(var entityChange in changes)
             {
-                await _connection.ExecuteQuery(query);
+                var result = await _connection.ExecuteScalar(entityChange.Query);
+                //TODO: set the entityChange.Item's Id = result.
+                logger.LogInformation("Database.Commit(): ExecuteScalar() called. Result: " + result);
+                
             }
 
             await _connection.CommitTransactionAsync();            
@@ -116,21 +119,21 @@ namespace NPrismy
            return await this._connection.QueryAsync<T>(query);
         }
         
-        internal void Insert(string query)
+        internal void Insert(object entity, string query)
         {
-            this._changeTracker.AddQuery(query);
+            this._changeTracker.AddItem(entity, query);
         }
 
         internal void Update(string query)
         {
-            this._changeTracker.AddQuery(query);
+            this._changeTracker.AddItem(query);
         }
         
 
         internal void Delete(string query)
         {
             logger.LogInformation("Delete query: " + query + " added to changeTracker.");
-            this._changeTracker.AddQuery(query);
+            this._changeTracker.AddItem(query);
         }
 
         /// <summary>

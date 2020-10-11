@@ -25,6 +25,11 @@ namespace NPrismy
             throw new System.NotImplementedException();
         }
 
+        public Task<object> ExecuteScalar(string query)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool IsOpen()
         {
             throw new System.NotImplementedException();

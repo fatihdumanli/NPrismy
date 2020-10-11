@@ -42,7 +42,7 @@ namespace NPrismy
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var insertQuery = _sqlCommandBuilder.BuildInsertQuery<T>(entity);     
-            this.Database.Insert(insertQuery);         
+            this.Database.Insert(entity, insertQuery);         
             return entity;   
         }
 
