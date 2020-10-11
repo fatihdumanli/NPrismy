@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Autofac;
 using NPrismy.IOC;
 using NPrismy.Logging;
@@ -41,7 +43,10 @@ namespace NPrismy
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
                 //Note that this is a default assignment. 
                 //Consumer assembly can ovveride this definition.
-                tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name, isIdentity: prop.Name.ToUpper().Equals("ID"));
+                AutofacModule.Container.Resolve<ILogger>().LogInformation("TABLEDEFINITIONBUILDER: column " + prop.Name + " type: " + prop.PropertyType.Name);
+                tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name, 
+                    isIdentity: prop.Name.ToUpper().Equals("ID"),
+                    IsNavigationProperty: !(prop.PropertyType.IsPrimitive  || prop.PropertyType.IsValueType || prop.PropertyType == typeof(string)));
             }
         
             return tableDefinition;

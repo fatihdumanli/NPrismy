@@ -20,7 +20,8 @@ namespace NPrismy
             sb.Append("INSERT INTO ");
             sb.Append(tableDefinition.GetTableName());
             sb.Append(" ");
-            var columns = tableDefinition.GetColumnDefinitions();
+            //We shouldn't use navigation properties when building an INSERT query.
+            var columns = tableDefinition.GetColumnDefinitions(includeNavigationProperties: false);
             var columnNames = columns.Select(w => w.ColumnName);
             var columnNamesSplittedWithComma = string.Join(',', columnNames);
             sb.Append(string.Format("( {0} )", columnNamesSplittedWithComma));
@@ -33,7 +34,7 @@ namespace NPrismy
             {
                 //May need to apply quotes
                 var objPropValue = obj.GetType().GetProperty(column.PropertyName).GetValue(obj);
-
+                logger.LogInformation(column.ColumnName + " is navigation: " + column.IsNavigationProperty);
                 if(objPropValue == null)
                 {
                     values.Add("null");

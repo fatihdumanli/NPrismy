@@ -48,17 +48,23 @@ namespace NPrismy
             return string.Format("{0}.{1}", _schemaName, _tableName);
         }
       
-        internal List<ColumnDefinition> GetColumnDefinitions(bool includeIdentity = false)
+        internal IEnumerable<ColumnDefinition> GetColumnDefinitions(bool includeIdentity = false, bool includeNavigationProperties = false)
         {
-            if(includeIdentity)
+
+            IEnumerable<ColumnDefinition> results = _columns;
+
+            if(!includeIdentity)
             {
-                return _columns;
+                results = _columns.Where(c => !c.IsIdentity);
             }
 
-            else
+            if(!includeNavigationProperties)
             {
-                return _columns.Where(c => !c.IsIdentity).ToList();
+                results =  results.Where(c => !c.IsNavigationProperty);
             }
+            
+            return results;
+            
         }
         internal string GetColumnNameFor(string propertyName)
         {
@@ -72,9 +78,9 @@ namespace NPrismy
             return column.ColumnName;
         }
 
-        internal void AddColumnDefinition(string propName, Type propertyType, string columnName, bool isIdentity = false)
+        internal void AddColumnDefinition(string propName, Type propertyType, string columnName, bool isIdentity = false, bool IsNavigationProperty = false)
         {
-            _columns.Add(new ColumnDefinition(propName, propertyType, columnName, isIdentity));
+            _columns.Add(new ColumnDefinition(propName, propertyType, columnName, isIdentity, IsNavigationProperty: IsNavigationProperty));
         }
 
     }
