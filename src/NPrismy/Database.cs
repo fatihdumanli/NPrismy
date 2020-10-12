@@ -87,13 +87,25 @@ namespace NPrismy
             
             var changes = _changeTracker.GetChanges();
             
+        
+
             foreach(var entityChange in changes)
             {
                 var result = await _connection.ExecuteScalar(entityChange.Query);
-                //TODO: set the entityChange.Item's Id = result.
+
                 
-                logger.LogInformation("Database.Commit(): ExecuteScalar() called. Result: " + result);
-                
+                /* BEGIN: Operations for setting entity's id to database-generated id */
+                var tableDefinition = TableRegistry.Instance
+                    .GetTableDefinition(entityChange.Item.GetType());
+
+                var pkColumn = tableDefinition.GetPrimaryKeyColumnDefinition();
+
+                //Convert result to PK's type.                
+                var converted = Convert.ChangeType(result, pkColumn.EntityPropertyType);
+                entityChange.Item.GetType().GetProperty(pkColumn.PropertyName).SetValue(entityChange.Item, converted);
+                /* END: Operations for setting entity's id to database-generated id */
+
+                logger.LogInformation("Database.Commit(): ExecuteScalar() called. Result: " + result);                
             }
 
             await _connection.CommitTransactionAsync();            

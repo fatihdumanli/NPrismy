@@ -80,8 +80,20 @@ namespace NPrismy
         private void RegisterTableDefinition(TableDefinition tableDefinition)
         {
             _tableDefinitions.Add(new KeyValuePair<Type, TableDefinition>(tableDefinition.GetEntityType(), tableDefinition));         
-            logger.LogInformation("Table definition registered successfully for type: " + tableDefinition.GetEntityType() + " table name: " + tableDefinition.GetTableName()); 
-            logger.LogInformation(" TableDefinitions count: " + _tableDefinitions.Count);
+        }
+
+
+
+        public TableDefinition GetTableDefinition(Type entityType)
+        {
+            var def = _tableDefinitions.Where(td => entityType.GetType() == td.Key.GetType()).SingleOrDefault();
+
+            if(def.Value == null)
+            {
+                throw new TableDefinitionNotFoundException(entityType.Name);
+            }
+
+            return def.Value;         
         }
 
 
@@ -90,10 +102,6 @@ namespace NPrismy
             logger.LogInformation(" GetTableDefinition called for type: " + typeof(T).Name);
             logger.LogInformation(" TableDefinitions count: " + _tableDefinitions.Count);
 
-            foreach(var t in _tableDefinitions)
-            {
-                 logger.LogInformation("Existing table definition: " + t.Key);
-            }
             var def = _tableDefinitions.Where(td => td.Key == typeof(T)).SingleOrDefault();
             
             if(def.Value == null)
