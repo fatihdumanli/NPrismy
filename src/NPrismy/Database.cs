@@ -20,9 +20,6 @@ namespace NPrismy
     {
         private DatabaseOptions _options;
 
-        //Do not access this object from EntityTable<T> (remember aggregate pattern.)
-        //One ChangeTracker instance per Database object
-        private ChangeTracker _changeTracker;
         private IConnection _connection;
         
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
@@ -33,7 +30,6 @@ namespace NPrismy
 
              try
             {
-                this._changeTracker = new ChangeTracker();
                 this._connection = AutofacModule.Container.Resolve<IConnection>();
                 logger.LogInformation("Database object is instantiated SUCCESSFULLY: " + this.GetType().Name);
             }
@@ -83,40 +79,7 @@ namespace NPrismy
 
         public async void Commit()
         {
-            /*
-            await _connection.BeginTransacionAsync();
-            
-            var changes = _changeTracker.GetChanges();
-            
-        
-
-            foreach(var entityChange in changes)
-            {
-
-                
-                /* BEGIN: Operations for setting entity's id to database-generated id */
-                /*
-                var tableDefinition = TableRegistry.Instance
-                    .GetTableDefinition(entityChange.Item.GetType());
-
-                var pkColumn = tableDefinition.GetPrimaryKeyColumnDefinition();
-
-                //Convert result to PK's type.                
-                var converted = Convert.ChangeType(result, pkColumn.EntityPropertyType);
-                entityChange.Item.GetType().GetProperty(pkColumn.PropertyName).SetValue(entityChange.Item, converted);
-                /* END: Operations for setting entity's id to database-generated id */
-
-    /*
-                logger.LogInformation("Database.Commit(): ExecuteScalar() called. Result: " + result);                
-            }
-
-            await _connection.CommitTransactionAsync();       */     
-
-            //begin a transaction
-            //read queries from changetracker
-            //execute queries
-            //commit transaction
-            //dispose the changeTracker. 
+             await _connection.CommitTransactionAsync(); 
         }
 
         internal async Task<IEnumerable<T>> Query<T>(string query)
@@ -143,7 +106,7 @@ namespace NPrismy
                 //ExecuteScalar.Result's type might not compatible with entity's PK column, we need to convert it.
                 var converted = Convert.ChangeType(await result, pkColumn.EntityPropertyType);
                 typeof(T).GetProperty(pkColumn.PropertyName).SetValue(entity, converted);   
-                
+
             } catch(Exception e)
             {
                 logger.LogError(e.Message);
@@ -155,14 +118,14 @@ namespace NPrismy
 
         internal void Update(string query)
         {
-            this._changeTracker.AddItem(query);
+            //this._changeTracker.AddItem(query);
         }
         
 
         internal void Delete(string query)
         {
             logger.LogInformation("Delete query: " + query + " added to changeTracker.");
-            this._changeTracker.AddItem(query);
+            //this._changeTracker.AddItem(query);
         }
 
     }

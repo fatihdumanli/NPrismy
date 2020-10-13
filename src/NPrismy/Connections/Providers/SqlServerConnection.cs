@@ -23,6 +23,16 @@ namespace NPrismy
             logger.LogInformation("SqlServerConnection: Created a new instance.");
         }
 
+
+        private SqlTransaction GetCurrentTransaction()
+        {
+            if(_currentTransaction == null)
+            {
+                _currentTransaction = connection.BeginTransaction();
+            }
+
+            return _currentTransaction;
+        }
         public async Task BeginTransacionAsync()
         {
             logger.LogInformation(" SqlServerConnection: Transaction beginning...");
@@ -47,15 +57,13 @@ namespace NPrismy
           
         }
 
-        public async Task Close()
-        {
-            await connection.CloseAsync();
-        }
-
         public async Task CommitTransactionAsync()
         {
             logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction...");
 
+            if(!IsOpen())
+                connection.Open();
+                
             try
             {
                 if(_currentTransaction == null)
@@ -63,9 +71,18 @@ namespace NPrismy
                     throw new TransactionNotFoundException();
                 }
                 
-                await _currentTransaction.CommitAsync();
-                await connection.CloseAsync();
-                logger.LogInformation("SqlServerConnection.CommitTransactionAsync(): Transaction committed successfully. Connection closed.");
+                try
+                {
+                    await _currentTransaction.CommitAsync();
+                }
+
+                catch(Exception e)
+                {
+                    RollBackTransactionAsync();
+                }
+
+                connection.CloseAsync();
+                logger.LogInformation("SqlServerConnection.CommitTransactionAsync(): Transaction committed successfully. Connection closing...");
             }
 
             catch(Exception e)
@@ -77,13 +94,17 @@ namespace NPrismy
 
         public async Task ExecuteQuery(string query)
         {
+            if(!IsOpen())
+                connection.Open();
+
             var sqlCommand = new SqlCommand(query, connection);
-            sqlCommand.Transaction = _currentTransaction;
+            sqlCommand.Transaction = this.GetCurrentTransaction();
             
             logger.LogInformation(" SqlServerConnection: Executing query: " + query);
             try
             {
                 var result = await sqlCommand.ExecuteNonQueryAsync();
+                connection.CloseAsync();
                 logger.LogInformation(" SqlServerConnection.ExecuteQuery(): Query executed, affected rows: " + result);
             }
 
@@ -97,15 +118,12 @@ namespace NPrismy
 
         public async Task<object> ExecuteScalar(string query)
         {
-            if(connection.State != System.Data.ConnectionState.Open)
+            if(!IsOpen())
                 connection.Open();
             
-            _currentTransaction= connection.BeginTransaction();
-
             var sqlCommand = new SqlCommand(query, connection);
-            sqlCommand.Transaction = _currentTransaction;
-
-          
+            sqlCommand.Transaction = this.GetCurrentTransaction();
+     
             try
             {
                 var result = await sqlCommand.ExecuteScalarAsync();
