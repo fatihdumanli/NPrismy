@@ -19,7 +19,7 @@ namespace NPrismy.IOC
 
         public static void RegisterArtifacts()
         {
-            AutofacModule.ContainerBuilder.RegisterType<IOLogger>().As<ILogger>();
+            AutofacModule.ContainerBuilder.RegisterType<DummyLogger>().As<ILogger>();
 
             AutofacModule.ContainerBuilder.RegisterType<SqlCommandBuilder>().As<ISqlCommandBuilder>().SingleInstance();
 
