@@ -10,7 +10,7 @@ namespace NPrismy
             throw new System.NotImplementedException();
         }
 
-        public Task Close()
+        public Task CloseConnection()
         {
             throw new System.NotImplementedException();
         }
@@ -20,7 +20,7 @@ namespace NPrismy
             throw new System.NotImplementedException();
         }
 
-        public Task ExecuteQuery(string query)
+        public Task ExecuteCommand(string query)
         {
             throw new System.NotImplementedException();
         }
@@ -35,7 +35,7 @@ namespace NPrismy
             throw new System.NotImplementedException();
         }
 
-        public Task Open()
+        public Task OpenConnection()
         {
             throw new System.NotImplementedException();
         }

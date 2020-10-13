@@ -116,16 +116,15 @@ namespace NPrismy
             return entity;
         }
 
-        internal void Update(string query)
+        internal void Update(string command)
         {
-            //this._changeTracker.AddItem(query);
+            _connection.ExecuteCommand(command);
         }
         
 
-        internal void Delete(string query)
+        internal void Delete(string command)
         {
-            logger.LogInformation("Delete query: " + query + " added to changeTracker.");
-            //this._changeTracker.AddItem(query);
+            _connection.ExecuteCommand(command);
         }
 
     }

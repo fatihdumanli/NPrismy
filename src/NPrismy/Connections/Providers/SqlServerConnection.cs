@@ -33,6 +33,17 @@ namespace NPrismy
 
             return _currentTransaction;
         }
+
+
+        private SqlConnection GetPersistentConnection()
+        {
+            if(!IsOpen())
+                connection.Open();
+
+            return connection;
+        }
+
+
         public async Task BeginTransacionAsync()
         {
             logger.LogInformation(" SqlServerConnection: Transaction beginning...");
@@ -44,8 +55,7 @@ namespace NPrismy
 
             try
             {
-                await connection.OpenAsync();
-                _currentTransaction = connection.BeginTransaction();
+                _currentTransaction = GetPersistentConnection().BeginTransaction();
                 logger.LogInformation("SqlServerConnection.BeginTransactionAsync(): Transaction began. _currentTransaction is: " + _currentTransaction);
             }
 
@@ -59,13 +69,7 @@ namespace NPrismy
 
         public async Task CommitTransactionAsync()
         {
-            logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction...");
 
-            if(!IsOpen())
-                connection.Open();
-                
-            try
-            {
                 if(_currentTransaction == null)
                 {
                     throw new TransactionNotFoundException();
@@ -73,38 +77,34 @@ namespace NPrismy
                 
                 try
                 {
+                    logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction... Connection state: " + connection.State);
+
                     await _currentTransaction.CommitAsync();
                 }
 
                 catch(Exception e)
                 {
+                    logger.LogError(e.Message);
                     RollBackTransactionAsync();
                 }
 
-                connection.CloseAsync();
-                logger.LogInformation("SqlServerConnection.CommitTransactionAsync(): Transaction committed successfully. Connection closing...");
-            }
+                this.CloseConnection();
 
-            catch(Exception e)
-            {
-                logger.LogError("CommitAsync Error: " + e.Message);
-                throw e;
-            }
+                logger.LogInformation("SqlServerConnection.CommitTransactionAsync(): Transaction committed successfully. Connection closing...");
         }
 
-        public async Task ExecuteQuery(string query)
+        public async Task ExecuteCommand(string query)
         {
-            if(!IsOpen())
-                connection.Open();
-
-            var sqlCommand = new SqlCommand(query, connection);
+            //get persistent connection
+            var conn = GetPersistentConnection();
+            
+            var sqlCommand = new SqlCommand(query, conn);
             sqlCommand.Transaction = this.GetCurrentTransaction();
             
             logger.LogInformation(" SqlServerConnection: Executing query: " + query);
             try
             {
                 var result = await sqlCommand.ExecuteNonQueryAsync();
-                connection.CloseAsync();
                 logger.LogInformation(" SqlServerConnection.ExecuteQuery(): Query executed, affected rows: " + result);
             }
 
@@ -118,16 +118,14 @@ namespace NPrismy
 
         public async Task<object> ExecuteScalar(string query)
         {
-            if(!IsOpen())
-                connection.Open();
-            
-            var sqlCommand = new SqlCommand(query, connection);
+           
+            var conn = GetPersistentConnection();
+            var sqlCommand = new SqlCommand(query, conn);
             sqlCommand.Transaction = this.GetCurrentTransaction();
      
             try
             {
                 var result = await sqlCommand.ExecuteScalarAsync();
-                connection.CloseAsync();
                 return result;
             }
 
@@ -143,14 +141,8 @@ namespace NPrismy
             return connection.State == System.Data.ConnectionState.Open;
         }
 
-        public async Task Open()
-        {
-            await connection.OpenAsync();
-        }
-
         public async Task<IEnumerable<T>> QueryAsync<T>(string query)
         {
-            logger.LogInformation("query to exexute: " + query);
             var sqlCommand = new SqlCommand(query, connection);
             
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
@@ -160,7 +152,6 @@ namespace NPrismy
 
             try
             {
-                await connection.OpenAsync();
                 using(SqlDataReader reader = await sqlCommand.ExecuteReaderAsync())
                 {
                    while (reader.Read())
@@ -169,7 +160,6 @@ namespace NPrismy
 
                        foreach(var column in columnDefinitions)
                        {
-                           logger.LogInformation("column: " + column.ColumnName);
                             var entityPropertyType = column.EntityPropertyType;
 
                             int columnOrdinal = -1;
@@ -204,8 +194,6 @@ namespace NPrismy
             }
 
     
-           await connection.CloseAsync();
-
            logger.LogInformation("queryResults count: " + queryResults.Count);
            return queryResults;            
         }
@@ -213,6 +201,16 @@ namespace NPrismy
         public Task RollBackTransactionAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public Task OpenConnection()
+        {
+            return connection.OpenAsync();
+        }
+
+        public Task CloseConnection()
+        {
+            return connection.CloseAsync();
         }
     }
 }

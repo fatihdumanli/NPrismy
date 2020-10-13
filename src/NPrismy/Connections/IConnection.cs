@@ -5,9 +5,11 @@ namespace NPrismy
 {
     internal interface IConnection
     {
+        Task OpenConnection();
+        Task CloseConnection();
         bool IsOpen();        
         Task<IEnumerable<T>> QueryAsync<T>(string query);
-        Task ExecuteQuery(string query);
+        Task ExecuteCommand(string query);
         Task<object> ExecuteScalar(string query);
         Task BeginTransacionAsync();
 
