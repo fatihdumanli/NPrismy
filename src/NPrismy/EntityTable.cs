@@ -38,14 +38,11 @@ namespace NPrismy
 
         //uses transaction
         //TODO: Return the entity with database generated ID
-        public T Add(T entity)
+        public async Task<T> Add(T entity)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var insertQuery = _sqlCommandBuilder.BuildInsertQuery<T>(entity);     
-            this.Database.Insert(entity, insertQuery);    
-
-            entity.GetType().GetProperty("Id").GetValue(entity);
-
+            entity = await this.Database.Insert(entity, insertQuery);    
             return entity;   
         }
 

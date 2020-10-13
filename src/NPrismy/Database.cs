@@ -83,6 +83,7 @@ namespace NPrismy
 
         public async void Commit()
         {
+            /*
             await _connection.BeginTransacionAsync();
             
             var changes = _changeTracker.GetChanges();
@@ -91,10 +92,10 @@ namespace NPrismy
 
             foreach(var entityChange in changes)
             {
-                var result = await _connection.ExecuteScalar(entityChange.Query);
 
                 
                 /* BEGIN: Operations for setting entity's id to database-generated id */
+                /*
                 var tableDefinition = TableRegistry.Instance
                     .GetTableDefinition(entityChange.Item.GetType());
 
@@ -105,16 +106,17 @@ namespace NPrismy
                 entityChange.Item.GetType().GetProperty(pkColumn.PropertyName).SetValue(entityChange.Item, converted);
                 /* END: Operations for setting entity's id to database-generated id */
 
+    /*
                 logger.LogInformation("Database.Commit(): ExecuteScalar() called. Result: " + result);                
             }
 
-            await _connection.CommitTransactionAsync();            
+            await _connection.CommitTransactionAsync();       */     
 
             //begin a transaction
             //read queries from changetracker
             //execute queries
             //commit transaction
-            //dispose the changeTracker.
+            //dispose the changeTracker. 
         }
 
         internal async Task<IEnumerable<T>> Query<T>(string query)
@@ -127,9 +129,28 @@ namespace NPrismy
            return await this._connection.QueryAsync<T>(query);
         }
         
-        internal void Insert(object entity, string query)
+        internal async Task<T> Insert<T>(T entity, string query)
         {
-            this._changeTracker.AddItem(entity, query);
+            var result = _connection.ExecuteScalar(query);
+            //Query is executed, Id is determined. But object is not persited yet. Set database-generated id.
+
+            try
+            {
+                /* BEGIN: Setting entity's PK property to database-generated id */
+                var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
+                var pkColumn = tableDefinition.GetPrimaryKeyColumnDefinition();
+            
+                //ExecuteScalar.Result's type might not compatible with entity's PK column, we need to convert it.
+                var converted = Convert.ChangeType(await result, pkColumn.EntityPropertyType);
+                typeof(T).GetProperty(pkColumn.PropertyName).SetValue(entity, converted);   
+                
+            } catch(Exception e)
+            {
+                logger.LogError(e.Message);
+            }
+         
+            /* END: Setting entity's PK property to database-generated id */
+            return entity;
         }
 
         internal void Update(string query)

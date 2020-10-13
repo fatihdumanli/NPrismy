@@ -97,14 +97,19 @@ namespace NPrismy
 
         public async Task<object> ExecuteScalar(string query)
         {
+            if(connection.State != System.Data.ConnectionState.Open)
+                connection.Open();
+            
+            _currentTransaction= connection.BeginTransaction();
+
             var sqlCommand = new SqlCommand(query, connection);
             sqlCommand.Transaction = _currentTransaction;
 
-            logger.LogInformation(" SqlServerConnection: Executing query: " + query);
+          
             try
             {
                 var result = await sqlCommand.ExecuteScalarAsync();
-                logger.LogInformation(" SqlServerConnection.ExecuteScalar(): Query executed. Result: " + result);
+                connection.CloseAsync();
                 return result;
             }
 
