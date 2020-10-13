@@ -78,6 +78,8 @@ namespace NPrismy
                 {
                     //Is entity value is non-numeric, it must be decorated with quotes ('')
                     //DecorateWithQuotes() decides whether the value is numeric or not
+
+                    //TODO: add datetime conversion for sql server.
                     values.Add(objPropValue.ToString().DecorateWithQuotes());
                 }
             }

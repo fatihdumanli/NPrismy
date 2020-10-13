@@ -28,7 +28,7 @@ namespace NPrismy
         {
             if(_currentTransaction == null)
             {
-                _currentTransaction = connection.BeginTransaction();
+                _currentTransaction = GetPersistentConnection().BeginTransaction();
             }
 
             return _currentTransaction;
@@ -70,7 +70,7 @@ namespace NPrismy
         public async Task CommitTransactionAsync()
         {
 
-                if(_currentTransaction == null)
+                if(GetCurrentTransaction() == null)
                 {
                     throw new TransactionNotFoundException();
                 }
@@ -78,14 +78,14 @@ namespace NPrismy
                 try
                 {
                     logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction... Connection state: " + connection.State);
-
-                    await _currentTransaction.CommitAsync();
+                    await GetCurrentTransaction().CommitAsync();
                 }
 
                 catch(Exception e)
                 {
                     logger.LogError(e.Message);
                     RollBackTransactionAsync();
+                    throw e;
                 }
 
                 this.CloseConnection();
@@ -143,7 +143,8 @@ namespace NPrismy
 
         public async Task<IEnumerable<T>> QueryAsync<T>(string query)
         {
-            var sqlCommand = new SqlCommand(query, connection);
+            var conn = GetPersistentConnection();
+            var sqlCommand = new SqlCommand(query, conn);
             
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
             var columnDefinitions = tableDefinition.GetColumnDefinitions(includeIdentity: true);
@@ -200,7 +201,7 @@ namespace NPrismy
 
         public Task RollBackTransactionAsync()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task OpenConnection()

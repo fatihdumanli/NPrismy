@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Newtonsoft.Json;
 using NPrismy.CrossCuttingConcerns.Exceptions;
+using NPrismy.Exceptions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
@@ -37,6 +38,7 @@ namespace NPrismy
             catch(Exception e)
             {
                 logger.LogError("ERROR: " + e.Message);
+                throw e;
             }
 
 
@@ -94,11 +96,12 @@ namespace NPrismy
         
         internal async Task<T> Insert<T>(T entity, string query)
         {
-            var result = _connection.ExecuteScalar(query);
             //Query is executed, Id is determined. But object is not persited yet. Set database-generated id.
 
             try
             {
+                var result = _connection.ExecuteScalar(query);
+
                 /* BEGIN: Setting entity's PK property to database-generated id */
                 var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
                 var pkColumn = tableDefinition.GetPrimaryKeyColumnDefinition();
@@ -110,6 +113,7 @@ namespace NPrismy
             } catch(Exception e)
             {
                 logger.LogError(e.Message);
+                throw new CommandExecutionException(query);
             }
          
             /* END: Setting entity's PK property to database-generated id */
