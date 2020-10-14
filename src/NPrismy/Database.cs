@@ -114,6 +114,7 @@ namespace NPrismy
             } catch(Exception e)
             {
                 logger.LogError(e.Message);
+                //TODO: include inner exception.
                 throw new CommandExecutionException(query);
             }
          
