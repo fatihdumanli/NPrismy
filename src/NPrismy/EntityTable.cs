@@ -26,7 +26,6 @@ namespace NPrismy
             logger.LogInformation(" Entitytable class is initialized.");    
         }
 
-
         public async Task<T> FindByPrimaryKey(object value)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
@@ -37,7 +36,6 @@ namespace NPrismy
         }
 
         //uses transaction
-        //TODO: Return the entity with database generated ID
         public async Task<T> Add(T entity)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
@@ -62,12 +60,11 @@ namespace NPrismy
             await this.Database.Delete(deleteQuery);
         }
 
-
-        public void Delete(object primaryKey)
+        public async Task Delete(object primaryKey)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var deleteQuery = _sqlCommandBuilder.BuildDeleteQuery<T>(primaryKey);
-            this.Database.Delete(deleteQuery);
+            await this.Database.Delete(deleteQuery);
         }
 
         /// <summary>
@@ -81,7 +78,6 @@ namespace NPrismy
             var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>();
 
             var results = await this.Database.Query<T>(sqlQuery);
-
             return results;
         }
         
@@ -94,7 +90,7 @@ namespace NPrismy
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var sqlQuery = _sqlCommandBuilder.BuildReadQuery<T>(e);
-            
+            logger.LogInformation("QUERY BUILT: " + sqlQuery);
             var results = await this.Database.Query<T>(sqlQuery);
             return results;
         }
