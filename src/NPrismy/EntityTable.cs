@@ -47,19 +47,19 @@ namespace NPrismy
         }
 
         //uses transaction
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var updateQuery = _sqlCommandBuilder.BuildUpdateQuery<T>(entity);
-            this.Database.Update(updateQuery);
+            await this.Database.Update(updateQuery);
         }
 
         //Uses a transaction
-        public void Delete(Expression<Func<T, bool>> expression)
+        public async Task Delete(Expression<Func<T, bool>> expression)
         {
             _sqlCommandBuilder = AutofacModule.Container.Resolve<ISqlCommandBuilder>();
             var deleteQuery = _sqlCommandBuilder.BuildDeleteQuery<T>(expression);
-            this.Database.Delete(deleteQuery);
+            await this.Database.Delete(deleteQuery);
         }
 
 

@@ -88,7 +88,7 @@ namespace NPrismy
                     throw e;
                 }
 
-                this.CloseConnection();
+                await this.CloseConnection();
 
                 logger.LogInformation("SqlServerConnection.CommitTransactionAsync(): Transaction committed successfully. Connection closing...");
         }

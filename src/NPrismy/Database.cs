@@ -82,6 +82,7 @@ namespace NPrismy
         public async void Commit()
         {
              await _connection.CommitTransactionAsync(); 
+             await _connection.CloseConnection();
         }
 
         internal async Task<IEnumerable<T>> Query<T>(string query)
@@ -120,15 +121,15 @@ namespace NPrismy
             return entity;
         }
 
-        internal void Update(string command)
+        internal async Task Update(string command)
         {
-            _connection.ExecuteCommand(command);
+            await _connection.ExecuteCommand(command);
         }
         
 
-        internal void Delete(string command)
+        internal async Task Delete(string command)
         {
-            _connection.ExecuteCommand(command);
+            await _connection.ExecuteCommand(command);
         }
 
     }
