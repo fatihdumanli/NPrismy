@@ -69,19 +69,37 @@ namespace NPrismy
             {
                 //May need to apply quotes
                 var objPropValue = obj.GetType().GetProperty(column.PropertyName).GetValue(obj);
+
+                //Check entity propety type
+                var entityPropertyType = obj.GetType().GetProperty(column.PropertyName).PropertyType;
+
+                string valueToAddQuery = null;
+
                 if(objPropValue == null)
                 {
-                    values.Add("null");
+                    valueToAddQuery = "null";
                 }
-
+                
                 else
                 {
-                    //Is entity value is non-numeric, it must be decorated with quotes ('')
-                    //DecorateWithQuotes() decides whether the value is numeric or not
 
-                    //TODO: add datetime conversion for sql server.
-                    values.Add(objPropValue.ToString().DecorateWithQuotes());
+                     //Is entity value is non-numeric, it must be decorated with quotes ('')
+                     //DecorateWithQuotes() decides whether the value is numeric or not
+                     if(entityPropertyType == typeof(DateTime))
+                     {
+                         valueToAddQuery = objPropValue.ConvertToSqlDateTime();
+                         valueToAddQuery = valueToAddQuery.DecorateWithQuotes();
+                     }
+
+                     else
+                     {
+                         valueToAddQuery = objPropValue.ToString().DecorateWithQuotes();
+                     }
+                    
                 }
+
+                values.Add(valueToAddQuery);
+
             }
             /* END: Obtaining entity values */
             sb.Append(string.Format("( {0} )", string.Join(',', values)));
