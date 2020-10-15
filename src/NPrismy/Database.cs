@@ -79,7 +79,7 @@ namespace NPrismy
             }
         }
 
-        public async void Commit()
+        public virtual async void Commit()
         {
              await _connection.CommitTransactionAsync(); 
              await _connection.CloseConnection();
@@ -98,7 +98,6 @@ namespace NPrismy
         internal async Task<T> Insert<T>(T entity, string query)
         {
             //Query is executed, Id is determined. But object is not persited yet. Set database-generated id.
-
             try
             {
                 var result = _connection.ExecuteScalar(query);
