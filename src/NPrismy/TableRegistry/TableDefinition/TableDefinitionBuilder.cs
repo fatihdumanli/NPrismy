@@ -15,7 +15,10 @@ namespace NPrismy
         //Builds table's column definitions.
         //Table name
         //Entity property name - database table column name mapping performed here.
-        public TableDefinition Build(Type entityType, string tableName = null, string schemaName = null, bool enableIdentityInsert = false)
+        public TableDefinition Build(Type entityType, 
+            string tableName = null,
+            string schemaName = null, 
+            bool enableIdentityInsert = false)
         {
             //Todo: configure for tableName and schemaName.
             var tableDefinitionOptions = AutofacModule.Container.Resolve<TableDefinitionOptions>
@@ -28,6 +31,7 @@ namespace NPrismy
     
             PropertyInfo[] entityTypeProperties = entityType.GetProperties();
 
+            /* BEGIN: Adding public properties to TableDefinition */
             foreach(var prop in entityTypeProperties)
             {
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
@@ -38,6 +42,7 @@ namespace NPrismy
                     isIdentity: prop.Name.ToUpper().Equals("ID"), //default
                     IsNavigationProperty: !(prop.PropertyType.IsPrimitive  || prop.PropertyType.IsValueType || prop.PropertyType == typeof(string)));
             }
+            /* END: Adding public properties to TableDefinition */
         
             return tableDefinition;
         }

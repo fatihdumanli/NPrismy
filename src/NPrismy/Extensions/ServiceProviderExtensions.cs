@@ -5,7 +5,7 @@ using NPrismy.Exceptions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
-namespace NPrismy
+namespace NPrismy.Extensions
 {
 
     //Entry point for package. Acts like Program.cs

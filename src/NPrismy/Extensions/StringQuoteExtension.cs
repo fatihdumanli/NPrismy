@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace NPrismy
+namespace NPrismy.Extensions
 {
     internal static class StringQuoteExtension
     {

@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
-namespace NPrismy
+namespace NPrismy.Extensions
 {
     internal static class SqlDataReaderExtensions
     {

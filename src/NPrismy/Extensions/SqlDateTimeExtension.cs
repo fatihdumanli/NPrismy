@@ -1,6 +1,6 @@
 using System;
 
-namespace NPrismy
+namespace NPrismy.Extensions
 {
     public static class SqlDateTimeExtensions
     {

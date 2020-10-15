@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NPrismy
+namespace NPrismy.Extensions
 {
     //Copied from https://gist.github.com/andrewjk/3186582 and pasted here :)
     internal static class StringPluralizationExtension

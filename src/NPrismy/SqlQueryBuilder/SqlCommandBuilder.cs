@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Autofac;
+using NPrismy.Extensions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 

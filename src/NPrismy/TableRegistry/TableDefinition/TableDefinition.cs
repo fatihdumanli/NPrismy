@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NPrismy.Exceptions;
+using NPrismy.Extensions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 

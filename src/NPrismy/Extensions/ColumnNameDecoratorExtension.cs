@@ -1,4 +1,4 @@
-namespace NPrismy
+namespace NPrismy.Extensions
 {
     public static class ColumnNameDecoratorExtension 
     {
