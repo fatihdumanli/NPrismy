@@ -47,6 +47,7 @@ namespace NPrismy
             {
 
                 string tableName = null, schemaName = null;
+                bool enableIdentityInsert = false;
 
                 //Check for '[TableName]' attribute of EntityTable<T>
                 var tableNameAttribute = property.GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();                
@@ -62,6 +63,14 @@ namespace NPrismy
                 {
                     schemaName = (schemaAttribute as SchemaAttribute).SchemaName;
                 }
+
+                //Check for '[EnableIdentityInsert]' attribute.
+                var enableIdentityInsertAttribute = property.GetCustomAttributes(typeof(EnableIdentityInsertAttribute), false).FirstOrDefault();
+
+                if(enableIdentityInsertAttribute != null)
+                {
+                    enableIdentityInsert = true;
+                }
                                 
 
                 var propertyType = property.PropertyType;
@@ -70,7 +79,7 @@ namespace NPrismy
                 {
                     var entityType = propertyType.GetGenericArguments()[0]; //EntityTable<T>
                     var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>()
-                        .Build(entityType, tableName: tableName, schemaName: schemaName);
+                        .Build(entityType, tableName: tableName, schemaName: schemaName, enableIdentityInsert: enableIdentityInsert);
                     TableRegistry.Instance.RegisterTableDefinition(tableDefinition);
                 }                
             }             

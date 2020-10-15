@@ -15,9 +15,13 @@ namespace NPrismy
         private string _tableName;
         private string _schemaName = "dbo";
         private Type _entityType;
+        private bool _isIdentityInsertEnabled = false;
+
+            
         public TableDefinition(TableDefinitionOptions options)
         {   
             _entityType = options.EntityType;
+            _isIdentityInsertEnabled = options.EnableIdentityInsert;
 
             if(!string.IsNullOrEmpty(options.TableName))
             {
@@ -39,6 +43,11 @@ namespace NPrismy
         }
 
       
+        internal bool IsIdentityInsertEnabled()
+        {
+            return _isIdentityInsertEnabled;
+        }
+        
         internal Type GetEntityType()
         {
             return _entityType;

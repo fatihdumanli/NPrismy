@@ -55,8 +55,11 @@ namespace NPrismy
             sb.Append("INSERT INTO ");
             sb.Append(tableDefinition.GetTableName());
             sb.Append(" ");
+
             //We shouldn't use navigation properties when building an INSERT query.
-            var columns = tableDefinition.GetColumnDefinitions(includeNavigationProperties: false);
+            //Include identity if identity insert enabled for table.
+            var columns = tableDefinition.GetColumnDefinitions(includeIdentity: tableDefinition.IsIdentityInsertEnabled(), includeNavigationProperties: false);
+            
             var columnNames = columns.Select(w => w.ColumnName).ToArray();
             columnNames.DecorateWithSquareBrackets();
             var columnNamesSplittedWithComma = string.Join(',', columnNames);

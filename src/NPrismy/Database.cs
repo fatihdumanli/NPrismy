@@ -110,9 +110,15 @@ namespace NPrismy
                 var converted = Convert.ChangeType(await result, pkColumn.EntityPropertyType);
                 typeof(T).GetProperty(pkColumn.PropertyName).SetValue(entity, converted);   
 
-            } catch(Exception e)
+            } 
+            catch(InvalidCastException invalidCastEx)
             {
-                logger.LogError(e.Message);
+                logger.LogWarning("Cannot convert DbNull. Details: " + invalidCastEx.Message);
+            }
+            
+            catch(Exception e)
+            {
+                logger.LogError("Database.Insert():" + e.GetType().Name);
                 //TODO: include inner exception.
                 throw new CommandExecutionException(query);
             }

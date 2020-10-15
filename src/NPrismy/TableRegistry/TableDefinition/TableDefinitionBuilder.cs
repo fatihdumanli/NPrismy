@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Autofac;
 using NPrismy.IOC;
 using NPrismy.Logging;
@@ -13,17 +15,20 @@ namespace NPrismy
         //Builds table's column definitions.
         //Table name
         //Entity property name - database table column name mapping performed here.
-        public TableDefinition Build(Type entityType, string tableName = null, string schemaName = null)
+        public TableDefinition Build(Type entityType, string tableName = null, string schemaName = null, bool enableIdentityInsert = false)
         {
             //Todo: configure for tableName and schemaName.
             var tableDefinitionOptions = AutofacModule.Container.Resolve<TableDefinitionOptions>
             (new NamedParameter("entityType", entityType), 
             new NamedParameter("tableName", tableName),
-            new NamedParameter("schema", schemaName));
+            new NamedParameter("schema", schemaName),
+            new NamedParameter("enableIdentityInsert", enableIdentityInsert));
 
             var tableDefinition = AutofacModule.Container.ResolveOptional<TableDefinition>(new NamedParameter("options", tableDefinitionOptions));
     
-            foreach(var prop in entityType.GetProperties())
+            PropertyInfo[] entityTypeProperties = entityType.GetProperties();
+
+            foreach(var prop in entityTypeProperties)
             {
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
                 //Note that this is a default assignment. 

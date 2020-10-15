@@ -119,6 +119,7 @@ namespace NPrismy
         public async Task<object> ExecuteScalar(string query)
         {
            
+            logger.LogInformation("ExecuteScalar query: " + query);
             var conn = GetPersistentConnection();
             var sqlCommand = new SqlCommand(query, conn);
             sqlCommand.Transaction = this.GetCurrentTransaction();
