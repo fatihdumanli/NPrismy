@@ -108,5 +108,15 @@ namespace NPrismy
                 IsNavigationProperty: IsNavigationProperty));
         }
 
+        internal void AddColumnDefinition(ColumnDefinition column)
+        {
+            _columns.Add(column);
+        }
+
+        internal void AddColumnDefinition(ColumnDefinition[] columns)
+        {
+            _columns.AddRange(columns);
+        }
+
     }
 }

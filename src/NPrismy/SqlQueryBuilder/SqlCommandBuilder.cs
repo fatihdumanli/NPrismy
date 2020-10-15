@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using Autofac;
 using NPrismy.Extensions;
@@ -60,7 +61,6 @@ namespace NPrismy
             //We shouldn't use navigation properties when building an INSERT query.
             //Include identity if identity insert enabled for table.
             var columns = tableDefinition.GetColumnDefinitions(includeIdentity: tableDefinition.IsIdentityInsertEnabled(), includeNavigationProperties: false);
-            
             var columnNames = columns.Select(w => w.ColumnName).ToArray();
             columnNames.DecorateWithSquareBrackets();
             var columnNamesSplittedWithComma = string.Join(',', columnNames);
@@ -72,11 +72,67 @@ namespace NPrismy
             /* BEGIN: Obtaining entity values */
             foreach(var column in columns)
             {
+                logger.LogInformation("BUILDINSERTQUERY:" + column.PropertyName);
                 //May need to apply quotes
-                var objPropValue = obj.GetType().GetProperty(column.PropertyName).GetValue(obj);
+                object objPropValue = null;
 
-                //Check entity propety type
-                var entityPropertyType = obj.GetType().GetProperty(column.PropertyName).PropertyType;
+                try
+                {
+                     objPropValue = obj.GetType().GetProperty(column.PropertyName)
+                    .GetValue(obj);
+                }
+
+                catch(Exception e)
+                {
+
+                }
+
+                //Trying twice for private fields.
+                //Trying get private field in case of exception.
+                try
+                {
+
+                    BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                    | BindingFlags.Static;
+                    FieldInfo field = obj.GetType().GetField(column.PropertyName, bindFlags);
+                    objPropValue = field.GetValue(obj);
+                    
+                }
+                catch(Exception e)
+                {
+
+                }
+            
+                    
+                logger.LogInformation("OBJPROPVALUE (TYPE): " + objPropValue);                  
+
+                Type entityPropertyType = null;
+                //Check entity property type
+                try
+                {
+                    entityPropertyType = obj.GetType()
+                        .GetProperty(column.PropertyName).PropertyType;
+                }
+
+                catch(Exception e)
+                {
+                    
+                }
+
+                //Trying twice for private fields.
+                try
+                {
+                    BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                    | BindingFlags.Static;
+                    FieldInfo field = obj.GetType().GetField(column.PropertyName, bindFlags);
+                    entityPropertyType = field.FieldType;
+                }
+
+                catch(Exception e)
+                {
+                    
+                }
+                 
 
                 string valueToAddQuery = null;
 

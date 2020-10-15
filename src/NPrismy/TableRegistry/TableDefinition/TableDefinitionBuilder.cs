@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using Newtonsoft.Json;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
@@ -18,7 +19,8 @@ namespace NPrismy
         public TableDefinition Build(Type entityType, 
             string tableName = null,
             string schemaName = null, 
-            bool enableIdentityInsert = false)
+            bool enableIdentityInsert = false,
+            ColumnDefinition[] privatePropertyColumns = null)
         {
             //Todo: configure for tableName and schemaName.
             var tableDefinitionOptions = AutofacModule.Container.Resolve<TableDefinitionOptions>
@@ -43,6 +45,11 @@ namespace NPrismy
                     IsNavigationProperty: !(prop.PropertyType.IsPrimitive  || prop.PropertyType.IsValueType || prop.PropertyType == typeof(string)));
             }
             /* END: Adding public properties to TableDefinition */
+            
+            /* BEGIN: Adding private properties to TableDefinition */
+            tableDefinition.AddColumnDefinition(privatePropertyColumns);
+                        
+            /* BEGIN: Adding private properties to TableDefinition */
         
             return tableDefinition;
         }

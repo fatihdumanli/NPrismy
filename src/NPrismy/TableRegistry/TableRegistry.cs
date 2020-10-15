@@ -48,6 +48,7 @@ namespace NPrismy
 
                 string tableName = null, schemaName = null;
                 bool enableIdentityInsert = false;
+                List<ColumnDefinition> _privatePropertyColumns = null;
 
                 //Check for '[TableName]' attribute of EntityTable<T>
                 var tableNameAttribute = property.GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();                
@@ -66,12 +67,29 @@ namespace NPrismy
 
                 //Check for '[EnableIdentityInsert]' attribute.
                 var enableIdentityInsertAttribute = property.GetCustomAttributes(typeof(EnableIdentityInsertAttribute), false).FirstOrDefault();
-
+                
                 if(enableIdentityInsertAttribute != null)
                 {
                     enableIdentityInsert = true;
                 }
-                                
+
+
+                //Check for '[IncudePrivateProperty]' attribute
+                var includePrivatePropertyAttributes = property.GetCustomAttributes(typeof(IncludePrivatePropertyAttribute), false);
+
+                if(includePrivatePropertyAttributes != null)
+                {
+                    _privatePropertyColumns = new List<ColumnDefinition>();
+
+                    foreach(var attr in includePrivatePropertyAttributes)
+                    {
+                        IncludePrivatePropertyAttribute attribute = (IncludePrivatePropertyAttribute) attr;
+
+                        _privatePropertyColumns
+                            .Add(new ColumnDefinition(propName: attribute._propertyName, propertyType: attribute._propertyType, columnName: attribute._columnName));
+                    }
+                }
+                                               
 
                 var propertyType = property.PropertyType;
                 
@@ -79,7 +97,9 @@ namespace NPrismy
                 {
                     var entityType = propertyType.GetGenericArguments()[0]; //EntityTable<T>
                     var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>()
-                        .Build(entityType, tableName: tableName, schemaName: schemaName, enableIdentityInsert: enableIdentityInsert);
+                        .Build(entityType, tableName: tableName, schemaName: schemaName, enableIdentityInsert: enableIdentityInsert, 
+                        privatePropertyColumns: _privatePropertyColumns.ToArray());
+                        
                     TableRegistry.Instance.RegisterTableDefinition(tableDefinition);
                 }                
             }             

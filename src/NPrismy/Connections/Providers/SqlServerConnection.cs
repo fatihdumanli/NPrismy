@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Data.SqlClient;
 using NPrismy.Exceptions;
+using NPrismy.Extensions;
 using NPrismy.IOC;
 using NPrismy.Logging;
 
