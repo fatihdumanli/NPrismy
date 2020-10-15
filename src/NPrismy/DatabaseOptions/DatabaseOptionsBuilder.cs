@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using NPrismy.IOC;
 
@@ -15,6 +16,24 @@ namespace NPrismy
         public DatabaseOptionsBuilder<T> UseProvider(PersistanceProvider provider)
         {
             _databaseOptions.Provider = provider;
+
+            try
+            {
+                    //Decide the connection object depends on Persistance Provider (SQL Server, Oracle DB or MySql)
+                var connectionConcrete = PersistanceProviderFactory.GetProvider(_databaseOptions.Provider);
+
+                //Register connection object to autofac container.                        
+                //Remember that Connection object constructors requires a connection string!!!
+                AutofacModule.ContainerBuilder.RegisterType(connectionConcrete).As<IConnection>()
+                    .WithParameter(new TypedParameter(typeof(string), _databaseOptions.ConnectionString));
+
+            }
+            catch(Exception e)
+            {
+
+            }
+                          
+
             AutofacModule.ContainerBuilder.RegisterInstance<DatabaseOptions>(_databaseOptions);
             return this;
         }
@@ -24,15 +43,24 @@ namespace NPrismy
             _databaseOptions.ConnectionString = connectionString;
             AutofacModule.ContainerBuilder.RegisterInstance<DatabaseOptions>(_databaseOptions);
 
-              
-            //Decide the connection object depends on Persistance Provider (SQL Server, Oracle DB or MySql)
-            var connectionConcrete = PersistanceProviderFactory.GetProvider(_databaseOptions.Provider);
 
-            //Register connection object to autofac container.                        
-            //Remember that Connection object constructors requires a connection string!!!
-            AutofacModule.ContainerBuilder.RegisterType(connectionConcrete).As<IConnection>()
-                .WithParameter(new TypedParameter(typeof(string), _databaseOptions.ConnectionString));
+            try
+            {
+                    //Decide the connection object depends on Persistance Provider (SQL Server, Oracle DB or MySql)
+                var connectionConcrete = PersistanceProviderFactory.GetProvider(_databaseOptions.Provider);
 
+                //Register connection object to autofac container.                        
+                //Remember that Connection object constructors requires a connection string!!!
+                AutofacModule.ContainerBuilder.RegisterType(connectionConcrete).As<IConnection>()
+                    .WithParameter(new TypedParameter(typeof(string), _databaseOptions.ConnectionString));
+
+            }
+            catch(Exception e)
+            {
+
+            }
+                          
+          
             this.Build();
             
             return this;
