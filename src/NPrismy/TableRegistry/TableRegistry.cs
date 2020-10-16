@@ -111,7 +111,7 @@ namespace NPrismy
                 var propertyType = property.PropertyType;
                 
                 //Check for EntityTable<>
-                if(propertyType.IsGenericType && propertyType.GenericTypeArguments[0] == typeof(EntityTable<>))
+                if(propertyType.IsGenericType)
                 {
                     var entityType = propertyType.GetGenericArguments()[0]; //EntityTable<T>
                     var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>()

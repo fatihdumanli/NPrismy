@@ -143,11 +143,19 @@ namespace NPrismy
             return connection.State == System.Data.ConnectionState.Open;
         }
 
+
+        //TODO QUERY DOES NOT NEED A TRANSACTION
+        //BUT EXECUTING A QUERY WITHOUT A TRANSACTION WHILE A TRANSACTION IS PROCEEDING,
+        //CAUSES ERROR: BeginExecuteReader requires the command to have a transaction when the connection assigned to the command is in a pending local transaction.  The Transaction property of the command has not been initialized.
+        //EITHER
+        //Use a different connection when query is not need a transaction.
+        //Or set query command's transaction property to current transaction
         public async Task<IEnumerable<T>> QueryAsync<T>(string query)
         {
             var conn = GetPersistentConnection();
             var sqlCommand = new SqlCommand(query, conn);
-            
+            sqlCommand.Transaction = this.GetCurrentTransaction();
+
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
             var columnDefinitions = tableDefinition.GetColumnDefinitions(includeIdentity: true);
 
