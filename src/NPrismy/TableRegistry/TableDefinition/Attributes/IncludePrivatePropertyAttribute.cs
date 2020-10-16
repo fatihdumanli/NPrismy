@@ -2,6 +2,7 @@ using System;
 
 namespace NPrismy
 {
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public sealed class IncludePrivatePropertyAttribute : Attribute
     {
         public string _propertyName { get; private set; }

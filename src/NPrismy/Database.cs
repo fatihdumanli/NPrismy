@@ -79,10 +79,10 @@ namespace NPrismy
             }
         }
 
-        public virtual async void Commit()
+        public virtual async Task Commit()
         {
-             await _connection.CommitTransactionAsync(); 
-             await _connection.CloseConnection();
+             _connection.CommitTransactionAsync(); 
+             _connection.CloseConnection();
         }
 
         internal async Task<IEnumerable<T>> Query<T>(string query)
