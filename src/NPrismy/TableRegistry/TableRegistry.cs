@@ -49,6 +49,7 @@ namespace NPrismy
                 string tableName = null, schemaName = null;
                 bool enableIdentityInsert = false;
                 List<ColumnDefinition> _privatePropertyColumns = null;
+                List<string> _ignoredProperties = null;
 
                 //Check for '[TableName]' attribute of EntityTable<T>
                 var tableNameAttribute = property.GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();                
@@ -89,16 +90,34 @@ namespace NPrismy
                             .Add(new ColumnDefinition(propName: attribute._propertyName, propertyType: attribute._propertyType, columnName: attribute._columnName));
                     }
                 }
+
+
+                //Check for '[IgnoreProperty]' attribute
+                var ignorePropertyAttributes = property.GetCustomAttributes(typeof(IgnorePropertyAttribute), false);
+                             
+                if(ignorePropertyAttributes != null)
+                {
+                    _ignoredProperties = new List<string>();
+                    foreach(var attr in ignorePropertyAttributes)
+                    {
+                        IgnorePropertyAttribute attribute = (IgnorePropertyAttribute) attr;
+
+                        _ignoredProperties.Add(attribute.PropertyName);
+                    }
+                }
+
                                                
 
                 var propertyType = property.PropertyType;
                 
-                if(propertyType.IsGenericType)
+                //Check for EntityTable<>
+                if(propertyType.IsGenericType && propertyType.GenericTypeArguments[0] == typeof(EntityTable<>))
                 {
                     var entityType = propertyType.GetGenericArguments()[0]; //EntityTable<T>
                     var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>()
                         .Build(entityType, tableName: tableName, schemaName: schemaName, enableIdentityInsert: enableIdentityInsert, 
-                        privatePropertyColumns: _privatePropertyColumns.ToArray());
+                        privatePropertyColumns: _privatePropertyColumns.ToArray(),
+                        ignoredProperties: _ignoredProperties.ToArray());
                         
                     TableRegistry.Instance.RegisterTableDefinition(tableDefinition);
                 }                
@@ -135,7 +154,7 @@ namespace NPrismy
             
             if(def.Value == null)
             {
-                throw new TableDefinitionNotFoundException(nameof(T));
+                throw new TableDefinitionNotFoundException(typeof(T).Name);
             }
 
             return def.Value;         

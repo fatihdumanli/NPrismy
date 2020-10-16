@@ -20,9 +20,9 @@ namespace NPrismy
             string tableName = null,
             string schemaName = null, 
             bool enableIdentityInsert = false,
-            ColumnDefinition[] privatePropertyColumns = null)
+            ColumnDefinition[] privatePropertyColumns = null,
+            string[] ignoredProperties = null)
         {
-            //Todo: configure for tableName and schemaName.
             var tableDefinitionOptions = AutofacModule.Container.Resolve<TableDefinitionOptions>
             (new NamedParameter("entityType", entityType), 
             new NamedParameter("tableName", tableName),
@@ -36,13 +36,15 @@ namespace NPrismy
             /* BEGIN: Adding public properties to TableDefinition */
             foreach(var prop in entityTypeProperties)
             {
+                
                 //Adding KeyValuePair<string, string> to columns collection of TableDefinition.
                 //Note that this is a default assignment. 
                 //Consumer assembly can ovveride this definition.
                 tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name, 
                     isPk: prop.Name.ToUpper().Equals("ID"), //default
                     isIdentity: prop.Name.ToUpper().Equals("ID"), //default
-                    IsNavigationProperty: !(prop.PropertyType.IsPrimitive  || prop.PropertyType.IsValueType || prop.PropertyType == typeof(string)));
+                    IsNavigationProperty: !(prop.PropertyType.IsPrimitive  || prop.PropertyType.IsValueType || prop.PropertyType == typeof(string)),
+                    isExcluded: ignoredProperties.Contains(prop.Name));
             }
             /* END: Adding public properties to TableDefinition */
             

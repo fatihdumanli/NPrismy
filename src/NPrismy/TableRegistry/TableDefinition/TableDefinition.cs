@@ -79,6 +79,9 @@ namespace NPrismy
             {
                 results =  results.Where(c => !c.IsNavigationProperty);
             }
+
+            //Exclude ignored properties.
+            results = results.Where(c => !c.IsExcluded);
             
             return results;
             
@@ -100,12 +103,14 @@ namespace NPrismy
             string columnName, 
             bool isPk = false,
             bool isIdentity = false,
-            bool IsNavigationProperty = false)
+            bool IsNavigationProperty = false,
+            bool isExcluded = false)
         {
             _columns.Add(new ColumnDefinition(propName, propertyType, columnName,
                 isPrimaryKey: isPk,
                 isIdentity: isIdentity, 
-                IsNavigationProperty: IsNavigationProperty));
+                IsNavigationProperty: IsNavigationProperty,
+                isExcluded: isExcluded));
         }
 
         internal void AddColumnDefinition(ColumnDefinition column)
