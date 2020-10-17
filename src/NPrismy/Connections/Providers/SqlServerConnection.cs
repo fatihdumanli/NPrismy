@@ -80,6 +80,7 @@ namespace NPrismy
                 {
                     logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction... Connection state: " + connection.State);
                     await GetCurrentTransaction().CommitAsync();
+                    _currentTransaction = null; //We are done with transaction, dispose it so next time work with new instance.
                 }
 
                 catch(Exception e)
