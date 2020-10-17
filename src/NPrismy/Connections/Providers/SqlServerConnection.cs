@@ -13,7 +13,7 @@ namespace NPrismy
     internal class SqlServerConnection 
         : IConnection
     {
-        private static SqlConnection connection;
+        private SqlConnection connection;
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
         private SqlTransaction _currentTransaction;
 
@@ -80,7 +80,7 @@ namespace NPrismy
                 {
                     logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction... Connection state: " + connection.State);
                     await GetCurrentTransaction().CommitAsync();
-                    _currentTransaction = null; //We are done with transaction, dispose it so next time work with new instance.
+                    _currentTransaction.Dispose(); //We are done with transaction, dispose it so next time work with new instance.
                 }
 
                 catch(Exception e)
