@@ -16,7 +16,8 @@ Give a hand! NPrismy needs some features to be implemented.
 2. [Installation](#installation)
 3. [Usage](#usage)
 4. [Examples](#examples)
-5. [Benchmark](#benchmark)
+5. [Entity Specifications](#entityspecifications)
+6. [Benchmark](#benchmark)
 
 ## Features
 * Simple CRUD operations with sugar syntax.
@@ -145,6 +146,10 @@ _database.Commit();
 _database.Cities.Delete(1); //Deletes the city with ID 1
 _database.Commit();
 ```
+
+## Entity Specifications
+
+
 
 
 
