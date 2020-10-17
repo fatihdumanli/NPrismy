@@ -106,7 +106,7 @@ Modify your controllers as accepts `WeatherForecastDatabase` (how you name it) a
 
 2. Querying with where clause
 
-`var cities = await _database.Cities.Query(c => c.Name == 'Copenhagen');
+`var cities = await _database.Cities.Query(c => c.Name == 'Copenhagen');`
 
 3. Getting by primary key
 
