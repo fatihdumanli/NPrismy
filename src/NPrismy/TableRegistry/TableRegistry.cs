@@ -156,9 +156,6 @@ namespace NPrismy
 
         public TableDefinition GetTableDefinition<T>()
         {
-            logger.LogInformation(" GetTableDefinition called for type: " + typeof(T).Name);
-            logger.LogInformation(" TableDefinitions count: " + _tableDefinitions.Count);
-
             var def = _tableDefinitions.Where(td => td.Key == typeof(T)).SingleOrDefault();
             
             if(def.Value == null)

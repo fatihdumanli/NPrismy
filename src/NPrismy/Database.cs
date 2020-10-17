@@ -121,8 +121,7 @@ namespace NPrismy
             {
                 logger.LogError("Database.Insert():" + e.GetType().Name);
                 logger.LogError(JsonConvert.SerializeObject(e));
-                //TODO: include inner exception.
-                throw new CommandExecutionException(query);
+                throw new CommandExecutionException(query, e);
             }
          
             /* END: Setting entity's PK property to database-generated id */

@@ -27,9 +27,12 @@ namespace NPrismy
 
         private SqlTransaction GetCurrentTransaction()
         {
+            logger.LogInformation("called GetCurrentTransaction(), _currentTransaction is: " + _currentTransaction);
             if(_currentTransaction == null)
             {
+                logger.LogInformation("Current transaction was null, calling GetPersistentConnection().BeginTransaction()");
                 _currentTransaction = GetPersistentConnection().BeginTransaction();
+                logger.LogInformation("now currenttransaction is: " + _currentTransaction);
             }
 
             return _currentTransaction;
@@ -73,14 +76,14 @@ namespace NPrismy
 
                 if(GetCurrentTransaction() == null)
                 {
-                    throw new TransactionNotFoundException();
+                    throw new TransactionNotFoundException("Can not commit transaction. CurrentTransaction is null.");
                 }
                 
                 try
                 {
                     logger.LogInformation(" SqlServerConnection.CommitTransactionAsync(): Committing current transaction... Connection state: " + connection.State);
                     await GetCurrentTransaction().CommitAsync();
-                    _currentTransaction.Dispose(); //We are done with transaction, dispose it so next time work with new instance.
+                    _currentTransaction = null; //We are done with transaction, dispose it so next time work with new instance.
                 }
 
                 catch(Exception e)
@@ -125,7 +128,12 @@ namespace NPrismy
             var conn = GetPersistentConnection();
             var sqlCommand = new SqlCommand(query, conn);
             sqlCommand.Transaction = this.GetCurrentTransaction();
-     
+
+            if(sqlCommand.Transaction == null)
+            {
+                throw new TransactionNotFoundException("ExecuteScalar needs a transaction.");
+            }
+
             try
             {
                 var result = await sqlCommand.ExecuteScalarAsync();

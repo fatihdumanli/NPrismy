@@ -79,7 +79,6 @@ namespace NPrismy
             /* BEGIN: Obtaining entity values */
             foreach(var column in columns)
             {
-                logger.LogInformation("BUILDINSERTQUERY:" + column.PropertyName);
                 //May need to apply quotes
                 object objPropValue = null;
 
@@ -109,10 +108,7 @@ namespace NPrismy
                 {
 
                 }
-            
                     
-                logger.LogInformation("OBJPROPVALUE (TYPE): " + objPropValue);                  
-
                 Type entityPropertyType = null;
                 //Check entity property type
                 try

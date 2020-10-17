@@ -13,7 +13,6 @@ namespace NPrismy.Extensions
         {
             object value = null;
             
-            AutofacModule.Container.Resolve<ILogger>().LogInformation("entity property type: " + entityPropertyType);
             if(entityPropertyType == typeof(Int32))
             {
                 value = reader.GetInt32(ordinal);
