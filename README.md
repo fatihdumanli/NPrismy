@@ -162,14 +162,14 @@ According to the example above, specifying the table name as `people` means your
 ***
 ### Specifying schema name
 
-> NOTE: NPrismy assumes `dbo` is the schema name as default. Use this specification only your table schema is different from `dbo`.
-
  Schema name can be specified with `[Schema]` attribute.
  Usage example:
  ```
  [Schema("usermanagement")]
 public EntityTable<AbstractPerson> People { get; set; }
  ```
+ 
+> NOTE: NPrismy assumes `dbo` is the schema name as default. Use this specification only your table schema is different from `dbo`.
 ***
 
 ### Specifying primary key
