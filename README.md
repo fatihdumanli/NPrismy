@@ -169,7 +169,7 @@ According to the example above, specifying the table name as `people` means your
 public EntityTable<AbstractPerson> People { get; set; }
  ```
  
-> NOTE: NPrismy assumes `dbo` is the schema name as default. Use this specification only your table schema is different from `dbo`.
+> NOTE: NPrismy assumes `dbo` is the schema name as default. Use this specification only if your table schema is different from `dbo`.
 ***
 
 ### Specifying primary key
