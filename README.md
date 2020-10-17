@@ -173,14 +173,23 @@ public EntityTable<AbstractPerson> People { get; set; }
 ***
 
 ### Specifying primary key
+Specify entity's primary key by using `[PrimaryKey]` attribute.
+
+Usage example:
+```
+[PrimaryKey("PolicyDefinitionId")]
+[TableName("policies")]
+public  EntityTable<PolicyDefinition> Policies { get; set; }
+```
+> NPrismy behaves the `Id` property of a entity as primary key as default. Use this specification only if your primary key column is different from `Id`.
 
 *** 
 ### Mapping private properties
-
 ***
 ### Ignoring properties
 ***
 ### Enabling identity insert
 ***
 
-## Benchmark
+## Benchmark Results
+I will fill up here.
