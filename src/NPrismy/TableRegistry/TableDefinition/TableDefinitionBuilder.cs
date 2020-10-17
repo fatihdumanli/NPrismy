@@ -21,7 +21,8 @@ namespace NPrismy
             string schemaName = null, 
             bool enableIdentityInsert = false,
             ColumnDefinition[] privatePropertyColumns = null,
-            string[] ignoredProperties = null)
+            string[] ignoredProperties = null,
+            string pkPropertyName = null)
         {
             var tableDefinitionOptions = AutofacModule.Container.Resolve<TableDefinitionOptions>
             (new NamedParameter("entityType", entityType), 
@@ -41,8 +42,8 @@ namespace NPrismy
                 //Note that this is a default assignment. 
                 //Consumer assembly can ovveride this definition.
                 tableDefinition.AddColumnDefinition(prop.Name, prop.PropertyType, prop.Name, 
-                    isPk: prop.Name.ToUpper().Equals("ID"), //default
-                    isIdentity: prop.Name.ToUpper().Equals("ID"), //default
+                    isPk: (pkPropertyName != null && pkPropertyName.Equals(prop.Name)) || prop.Name.ToUpper().Equals("ID"), //default
+                    isIdentity: (pkPropertyName != null && pkPropertyName.Equals(prop.Name)) || prop.Name.ToUpper().Equals("ID"), //default
                     IsNavigationProperty: !(prop.PropertyType.IsPrimitive  || prop.PropertyType.IsValueType || prop.PropertyType == typeof(string)),
                     isExcluded: ignoredProperties.Contains(prop.Name));
             }

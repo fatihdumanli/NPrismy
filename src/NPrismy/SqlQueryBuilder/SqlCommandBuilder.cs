@@ -54,6 +54,13 @@ namespace NPrismy
         {
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
             StringBuilder sb = new StringBuilder();
+
+            if(tableDefinition.IsIdentityInsertEnabled())
+            {
+                string enableIdentityInsertStatement = string.Format("SET IDENTITY_INSERT {0} ON ", tableDefinition.GetTableName()); 
+                sb.Append(enableIdentityInsertStatement);
+            }
+            
             sb.Append("INSERT INTO ");
             sb.Append(tableDefinition.GetTableName());
             sb.Append(" ");

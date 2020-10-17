@@ -105,7 +105,8 @@ namespace NPrismy
                 /* BEGIN: Setting entity's PK property to database-generated id */
                 var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
                 var pkColumn = tableDefinition.GetPrimaryKeyColumnDefinition();
-            
+
+                logger.LogInformation("PKCOLUMN IS: " + pkColumn);
                 //ExecuteScalar.Result's type might not compatible with entity's PK column, we need to convert it.
                 var converted = Convert.ChangeType(await result, pkColumn.EntityPropertyType);
                 typeof(T).GetProperty(pkColumn.PropertyName).SetValue(entity, converted);   
@@ -119,6 +120,7 @@ namespace NPrismy
             catch(Exception e)
             {
                 logger.LogError("Database.Insert():" + e.GetType().Name);
+                logger.LogError(JsonConvert.SerializeObject(e));
                 //TODO: include inner exception.
                 throw new CommandExecutionException(query);
             }

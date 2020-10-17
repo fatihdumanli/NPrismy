@@ -46,7 +46,7 @@ namespace NPrismy
             foreach(var property in databaseProperties)
             {
 
-                string tableName = null, schemaName = null;
+                string tableName = null, schemaName = null, pkPropertyName = null;
                 bool enableIdentityInsert = false;
                 List<ColumnDefinition> _privatePropertyColumns = null;
                 List<string> _ignoredProperties = null;
@@ -106,7 +106,15 @@ namespace NPrismy
                     }
                 }
 
-                                               
+                //Check for '[PrimaryKey]' attribute
+                var primaryKeyAttribute = property.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).FirstOrDefault();
+
+                if(primaryKeyAttribute != null)
+                {
+                    pkPropertyName = ((PrimaryKeyAttribute) primaryKeyAttribute).PropertyName;
+                }
+
+
 
                 var propertyType = property.PropertyType;
                 
@@ -117,7 +125,8 @@ namespace NPrismy
                     var tableDefinition = AutofacModule.Container.Resolve<ITableDefinitionBuilder>()
                         .Build(entityType, tableName: tableName, schemaName: schemaName, enableIdentityInsert: enableIdentityInsert, 
                         privatePropertyColumns: _privatePropertyColumns.ToArray(),
-                        ignoredProperties: _ignoredProperties.ToArray());
+                        ignoredProperties: _ignoredProperties.ToArray(),
+                        pkPropertyName: pkPropertyName);
                         
                     TableRegistry.Instance.RegisterTableDefinition(tableDefinition);
                 }                
