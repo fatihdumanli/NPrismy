@@ -149,7 +149,6 @@ _database.Commit();
 ## Entity Specifications
 > Note: All these following specifications must be applied on `EntityTable<T>` properties of your Database class.
 
-***
 ### Specifying table name
 > NOTE: NPrismy pluralizes the entity type as default table name. Use this attribute only you need a different name.
 
