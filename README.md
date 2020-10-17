@@ -151,6 +151,7 @@ _database.Commit();
 ## Entity Specifications
 > Note: All these following specifications must be applied on `EntityTable<T>` properties of your Database class.
 
+
 * Specifying table name:
 Table names can be specified with `[TableName]` attribute. 
 Usage example:
@@ -160,6 +161,7 @@ public EntityTable<AbstractPerson> People { get; set; }
 ```
 > NPrismy pluralizes the entity type as default table name. Use this attribute only you need a different name.
 
+
 * Specifying schema name:
  Schema name can be specified with `[Schema]` attribute.
  Usage example:
@@ -167,6 +169,7 @@ public EntityTable<AbstractPerson> People { get; set; }
  [Schema("usermanagement")]
 public EntityTable<AbstractPerson> People { get; set; }
  ```
+
 
 * Specifying primary key:
 
