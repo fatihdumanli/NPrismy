@@ -1,15 +1,13 @@
+
 # NPrismy - A Lightweight .NET Core ORM Framework
 
 ![NPrismy](https://raw.githubusercontent.com/fatihdumanli/NPrismy/master/nprismy-logo.png)
 
 NPrismy is lightweight ORM for ASP.NET Core Web Applications. 
 
-Give a hand! NPrismy needs some features to be implemented.
-
 - [ ] Add MySql support
 - [ ] Add Oracle Db support
 - [ ] Add benchmark results
-- [ ] Implement RollbackAsync() method.
 
 ## Table Of Contents
 1. [Features](#features)
@@ -23,6 +21,7 @@ Give a hand! NPrismy needs some features to be implemented.
 * Simple CRUD operations with sugar syntax.
 * Using database transactions
 * Customized entity mappings
+* Private field mapping support
 * Managing persistance concerns with a high level language
 
 ## Installation
@@ -107,7 +106,7 @@ Modify your controllers as accepts `WeatherForecastDatabase` (how you name it) a
 
 2. Querying with where clause
 
-`var cities = await _database.Cities.Query(c => c.Name == 'Copenhagen');
+`var cities = await _database.Cities.Query(c => c.Name == 'Copenhagen');`
 
 3. Getting by primary key
 
@@ -148,9 +147,49 @@ _database.Commit();
 ```
 
 ## Entity Specifications
+> Note: All these following specifications must be applied on `EntityTable<T>` properties of your Database class.
 
+### Specifying table name
+> NOTE: NPrismy pluralizes the entity type as default table name. Use this attribute only you need a different name.
 
+Table names can be specified with `[TableName]` attribute. 
+Usage example:
+```
+[TableName("people")]
+public EntityTable<AbstractPerson> People { get; set; }
+```
+According to the example above, specifying the table name as `people` means your table name is `dbo.people` instead of `dbo.AbstractPeople`.
+***
+### Specifying schema name
 
+ Schema name can be specified with `[Schema]` attribute.
+ Usage example:
+ ```
+ [Schema("usermanagement")]
+public EntityTable<AbstractPerson> People { get; set; }
+ ```
+ 
+> NOTE: NPrismy assumes `dbo` is the schema name as default. Use this specification only if your table schema is different from `dbo`.
+***
 
+### Specifying primary key
+Specify entity's primary key by using `[PrimaryKey]` attribute.
 
-## Benchmark
+Usage example:
+```
+[PrimaryKey("PolicyDefinitionId")]
+[TableName("policies")]
+public  EntityTable<PolicyDefinition> Policies { get; set; }
+```
+> NPrismy behaves the `Id` property of a entity as primary key as default. Use this specification only if your primary key column is different from `Id`.
+
+*** 
+### Mapping private properties
+***
+### Ignoring properties
+***
+### Enabling identity insert
+***
+
+## Benchmark Results
+I will fill up here.
