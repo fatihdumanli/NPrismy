@@ -5,12 +5,9 @@
 
 NPrismy is lightweight ORM for ASP.NET Core Web Applications. 
 
-Give a hand! NPrismy needs some features to be implemented.
-
 - [ ] Add MySql support
 - [ ] Add Oracle Db support
 - [ ] Add benchmark results
-- [ ] Implement RollbackAsync() method.
 
 ## Table Of Contents
 1. [Features](#features)
@@ -24,6 +21,7 @@ Give a hand! NPrismy needs some features to be implemented.
 * Simple CRUD operations with sugar syntax.
 * Using database transactions
 * Customized entity mappings
+* Private field mapping support
 * Managing persistance concerns with a high level language
 
 ## Installation
@@ -151,26 +149,39 @@ _database.Commit();
 ## Entity Specifications
 > Note: All these following specifications must be applied on `EntityTable<T>` properties of your Database class.
 
+***
+### Specifying table name
+> NOTE: NPrismy pluralizes the entity type as default table name. Use this attribute only you need a different name.
 
-* Specifying table name:
 Table names can be specified with `[TableName]` attribute. 
 Usage example:
 ```
 [TableName("people")]
 public EntityTable<AbstractPerson> People { get; set; }
 ```
-> NPrismy pluralizes the entity type as default table name. Use this attribute only you need a different name.
+According to the example above, specifying the table name as `people` means your table name is `dbo.people` instead of `dbo.AbstractPeople`.
+***
+### Specifying schema name
 
+> NOTE: NPrismy assumes `dbo` is the schema name as default. Use this specification only your table schema is different from `dbo`.
 
-* Specifying schema name:
  Schema name can be specified with `[Schema]` attribute.
  Usage example:
  ```
  [Schema("usermanagement")]
 public EntityTable<AbstractPerson> People { get; set; }
  ```
+***
 
+### Specifying primary key
 
-* Specifying primary key:
+*** 
+### Mapping private properties
+
+***
+### Ignoring properties
+***
+### Enabling identity insert
+***
 
 ## Benchmark
