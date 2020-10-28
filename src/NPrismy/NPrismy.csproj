@@ -8,9 +8,9 @@
     <PackageProjectUrl>https://github.com/fatihdumanli/NPrismy</PackageProjectUrl>
     <RepositoryUrl>https://github.com/fatihdumanli/NPrismy</RepositoryUrl>
     <PackageIcon>nprismy-logo.png</PackageIcon>
-    <AssemblyVersion>0.1.1.1</AssemblyVersion>
-    <FileVersion>0.1.1.1</FileVersion>
-    <Version>1.1.1</Version>
+    <AssemblyVersion>0.1.1.2</AssemblyVersion>
+    <FileVersion>0.1.1.2</FileVersion>
+    <Version>1.1.2</Version>
     <PackageReleaseNotes>Added PrimaryKey attribute lets specify primary key of a specific entity.</PackageReleaseNotes>
   </PropertyGroup>
 

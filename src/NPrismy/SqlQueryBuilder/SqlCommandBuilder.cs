@@ -55,8 +55,10 @@ namespace NPrismy
             var tableDefinition = TableRegistry.Instance.GetTableDefinition<T>();
             StringBuilder sb = new StringBuilder();
 
-            if(tableDefinition.IsIdentityInsertEnabled())
-            {
+            if(tableDefinition.IsIdentityInsertEnabled() && 
+                (tableDefinition.GetPrimaryKeyColumnDefinition().EntityPropertyType.Equals(typeof(Int32)) 
+                || tableDefinition.GetPrimaryKeyColumnDefinition().EntityPropertyType.Equals(typeof(Int64))))
+             {
                 string enableIdentityInsertStatement = string.Format("SET IDENTITY_INSERT {0} ON ", tableDefinition.GetTableName()); 
                 sb.Append(enableIdentityInsertStatement);
             }
@@ -101,7 +103,10 @@ namespace NPrismy
                     BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
                     | BindingFlags.Static;
                     FieldInfo field = obj.GetType().GetField(column.PropertyName, bindFlags);
-                    objPropValue = field.GetValue(obj);
+                    
+
+                    if(field != null)
+                        objPropValue = field.GetValue(obj);
                     
                 }
                 catch(Exception e)
@@ -128,10 +133,11 @@ namespace NPrismy
                     BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
                     | BindingFlags.Static;
                     FieldInfo field = obj.GetType().GetField(column.PropertyName, bindFlags);
-                    entityPropertyType = field.FieldType;
+                    if(field != null)
+                        entityPropertyType = field.FieldType;
                 }
 
-                catch(Exception e)
+                catch (Exception e)
                 {
                     
                 }

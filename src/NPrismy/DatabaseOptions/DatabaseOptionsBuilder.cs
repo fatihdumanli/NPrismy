@@ -7,6 +7,7 @@ namespace NPrismy
     public class DatabaseOptionsBuilder<T>
     {
         private DatabaseOptions _databaseOptions;
+        private bool isProviderSet = false, isConnStringSet = false;
 
         public DatabaseOptionsBuilder()
         {
@@ -35,6 +36,11 @@ namespace NPrismy
                           
 
             AutofacModule.ContainerBuilder.RegisterInstance<DatabaseOptions>(_databaseOptions);
+
+            isProviderSet = true;
+            if (isConnStringSet)
+                this.Build();
+
             return this;
         }
 
@@ -46,7 +52,7 @@ namespace NPrismy
 
             try
             {
-                    //Decide the connection object depends on Persistance Provider (SQL Server, Oracle DB or MySql)
+                //Decide the connection object depends on Persistance Provider (SQL Server, Oracle DB or MySql)
                 var connectionConcrete = PersistanceProviderFactory.GetProvider(_databaseOptions.Provider);
 
                 //Register connection object to autofac container.                        
@@ -57,11 +63,13 @@ namespace NPrismy
             }
             catch(Exception e)
             {
+                
 
             }
-                          
-          
-            this.Build();
+
+            isConnStringSet = true;
+            if(isProviderSet)          
+              this.Build();
             
             return this;
         }
