@@ -24,6 +24,12 @@ namespace NPrismy
         private IConnection _connection;
         
         private ILogger logger = AutofacModule.Container.Resolve<ILogger>();
+
+        public static DatabaseOptionsBuilder<T> Initialize<T>()
+        {
+             AutofacModule.RegisterArtifacts();
+             return new DatabaseOptionsBuilder<T>();        
+        }
         
         //Property (EntityTable<>) instantiation must be performed here!
         public Database()

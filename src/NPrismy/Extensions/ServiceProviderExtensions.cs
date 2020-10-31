@@ -20,7 +20,5 @@ namespace NPrismy.Extensions
 
             return new DatabaseOptionsBuilder<T>();
         }
-
-
     }
 }
